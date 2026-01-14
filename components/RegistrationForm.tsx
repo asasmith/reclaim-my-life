@@ -295,7 +295,10 @@ export default function RegistrationForm() {
         </button>
 
         {submitStatus === "success" && (
-          <div className="mt-4 rounded-md bg-emerald-50 p-4 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-100">
+          <div
+            className="mt-4 rounded-md bg-emerald-50 p-4 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-100"
+            data-testid="registration-success"
+          >
             Thank you for your registration! We'll contact you within 24 hours.
           </div>
         )}
