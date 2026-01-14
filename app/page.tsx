@@ -1,31 +1,47 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Home() {
   return (
     <div className="bg-white dark:bg-black">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-blue-50 to-emerald-50 dark:from-slate-900 dark:to-zinc-900">
+      <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 to-emerald-50 dark:from-slate-900 dark:to-zinc-900">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-5xl lg:text-6xl">
-              Reclaim Your Life
-            </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-lg sm:text-xl text-slate-700 dark:text-slate-300">
-              A safe, supportive environment for recovery and personal growth
-            </p>
-            <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
-              <Link
-                href="/register"
-                className="w-full sm:w-auto rounded-full bg-blue-600 px-8 py-3 text-center text-lg font-semibold text-white transition-colors hover:bg-blue-700"
-              >
-                Start Your Journey
-              </Link>
-              <Link
-                href="/contact"
-                className="w-full sm:w-auto rounded-full border-2 border-blue-600 px-8 py-3 text-center text-lg font-semibold text-blue-600 transition-colors hover:bg-blue-50 dark:border-blue-500 dark:text-blue-500 dark:hover:bg-slate-800"
-              >
-                Contact Us
-              </Link>
+          <div className="grid gap-12 lg:grid-cols-2 lg:gap-8">
+            {/* Text Content */}
+            <div className="flex flex-col justify-center text-center lg:text-left">
+              <h1 className="text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-5xl lg:text-6xl">
+                Reclaim Your Life
+              </h1>
+              <p className="mx-auto mt-6 max-w-2xl text-lg sm:text-xl text-slate-700 dark:text-slate-300 lg:mx-0">
+                A safe, supportive environment for recovery and personal growth
+              </p>
+              <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6 lg:justify-start">
+                <Link
+                  href="/register"
+                  className="w-full sm:w-auto rounded-full bg-blue-600 px-8 py-3 text-center text-lg font-semibold text-white transition-colors hover:bg-blue-700"
+                >
+                  Start Your Journey
+                </Link>
+                <Link
+                  href="/contact"
+                  className="w-full sm:w-auto rounded-full border-2 border-blue-600 px-8 py-3 text-center text-lg font-semibold text-blue-600 transition-colors hover:bg-blue-50 dark:border-blue-500 dark:text-blue-500 dark:hover:bg-slate-800"
+                >
+                  Contact Us
+                </Link>
+              </div>
+            </div>
+
+            {/* Hero Image */}
+            <div className="relative h-64 sm:h-80 lg:h-full lg:min-h-[500px]">
+              <Image
+                src="https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=800&h=600&fit=crop&q=80"
+                alt="Peaceful recovery environment with natural sunlight"
+                fill
+                priority
+                className="rounded-lg object-cover shadow-2xl"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
             </div>
           </div>
         </div>
