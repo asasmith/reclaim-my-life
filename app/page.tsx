@@ -5,24 +5,24 @@ export default function Home() {
     <div className="bg-white dark:bg-black">
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-blue-50 to-emerald-50 dark:from-slate-900 dark:to-zinc-900">
-        <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
           <div className="text-center">
-            <h1 className="text-5xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-6xl">
+            <h1 className="text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-5xl lg:text-6xl">
               Reclaim Your Life
             </h1>
-            <p className="mt-6 text-xl text-slate-700 dark:text-slate-300">
+            <p className="mx-auto mt-6 max-w-2xl text-lg sm:text-xl text-slate-700 dark:text-slate-300">
               A safe, supportive environment for recovery and personal growth
             </p>
-            <div className="mt-10 flex items-center justify-center gap-6">
+            <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
               <Link
                 href="/register"
-                className="rounded-full bg-blue-600 px-8 py-3 text-lg font-semibold text-white transition-colors hover:bg-blue-700"
+                className="w-full sm:w-auto rounded-full bg-blue-600 px-8 py-3 text-center text-lg font-semibold text-white transition-colors hover:bg-blue-700"
               >
                 Start Your Journey
               </Link>
               <Link
                 href="/contact"
-                className="rounded-full border-2 border-blue-600 px-8 py-3 text-lg font-semibold text-blue-600 transition-colors hover:bg-blue-50 dark:border-blue-500 dark:text-blue-500 dark:hover:bg-slate-800"
+                className="w-full sm:w-auto rounded-full border-2 border-blue-600 px-8 py-3 text-center text-lg font-semibold text-blue-600 transition-colors hover:bg-blue-50 dark:border-blue-500 dark:text-blue-500 dark:hover:bg-slate-800"
               >
                 Contact Us
               </Link>
