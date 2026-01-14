@@ -159,8 +159,15 @@ try {
 ### Comments
 - Write self-documenting code; minimize comments
 - Use comments for "why", not "what"
-- JSDoc for public APIs and complex functions
-- TODO comments: Use `// TODO: description` format
+- **Avoid obvious comments**: Don't comment what the code clearly shows
+  - ❌ Bad: `// Loop through users` above `users.forEach(...)`
+  - ❌ Bad: `// Set user name` above `user.name = name`
+  - ❌ Bad: `// Mock Next.js navigation` above `vi.mock("next/navigation")`
+- **No speculative comments**: Don't comment about future intentions
+  - ❌ Bad: `// Structure ready for future providers`
+  - ❌ Bad: `// Not enforced initially, but tracked for future 80% goal`
+- **JSDoc only when needed**: For public APIs when type signature isn't self-explanatory
+- **TODO comments**: Use `// TODO: description` format when needed
 
 ## Project Structure
 
@@ -185,8 +192,48 @@ try {
 - Follow conventional commits format when possible
 - Don't commit: `node_modules`, `.next`, `.env*`, build outputs
 
+## Development Philosophy & Preferences
+
+### Dependency Management
+- **Just-in-time additions**: Only add packages/helpers when actively implementing features that need them
+- **Avoid speculative code**: No "we might need this later" additions
+- **Example**: Don't install accessibility testing packages during test setup; install them when writing the first accessibility test
+- **Why**: Keeps codebase lean, avoids unused dependencies, prevents premature optimization
+
+### Code Organization
+- **Grow organically**: Let file structure and utilities emerge from actual needs
+- **Refactor when painful**: Don't over-architect upfront; wait for patterns to emerge
+- **Delete unused code**: Regular cleanup of unused files/functions is encouraged
+- **Minimal viable structure**: Start simple, add complexity only when necessary
+
+### AI Collaboration Guidelines
+
+#### Learning Balance (70/30 Rule)
+- **AI handles 70%**: Boilerplate, setup, configuration, repetitive patterns, well-established best practices
+- **Human handles 30%**: Novel problems, business logic, learning opportunities, complex decisions
+- **Goal**: Maximize learning while maintaining development velocity
+
+#### Review & Understanding
+- **Mandatory review**: Always review AI-generated code before committing
+- **Question decisions**: Challenge AI on "why" for significant architectural or technical choices
+- **Understand before accepting**: If you can't explain what the code does, ask for clarification or research it
+- **Modify and experiment**: Don't just accept AI output; try changing it, breaking it, improving it
+
+#### Communication Style
+- **Explain tradeoffs**: AI should present pros/cons for major decisions, not just implement
+- **Ask permission**: For adding new dependencies, major refactors, or architectural changes
+- **Provide context**: AI should explain why a particular approach was chosen over alternatives
+- **Link to resources**: Include relevant documentation or learning resources when introducing new concepts
+
+#### Development Workflow
+- **Incremental additions**: Add one piece at a time, verify it works, then move to the next
+- **Test immediately**: Verify each change works before moving forward
+- **Commit frequently**: Small, focused commits are preferred over large changesets
+- **Document decisions**: Significant choices should be explained in commit messages or comments
+
 ## Additional Notes
-- This is a fresh Next.js project; early stage of development
+- This is a sober living home website; early stage of development
+- Testing infrastructure uses Vitest + React Testing Library + happy-dom
 - No state management library configured yet
 - No API client configured yet
 - No database or backend configured yet
