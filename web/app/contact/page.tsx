@@ -1,22 +1,24 @@
-import { getContactPage, getSiteSettings } from "@/lib/sanity/queries";
 import type { Metadata } from "next";
+import { draftMode } from "next/headers";
+import { getContactPage, getSiteSettings } from "@/lib/sanity/queries";
 
-export const revalidate = 300;
+export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const contactPage = await getContactPage();
+  const { isEnabled } = await draftMode();
+  const contactPage = await getContactPage({ preview: isEnabled });
 
   if (!contactPage?.seo) {
     return {
       title: "Contact Us - Reclaim My Life",
-      description: "Get in touch with us. We're here to help 24/7.",
+      description: "Get in touch with us. We are here to help 24/7.",
     };
   }
 
   return {
     title: contactPage.seo.metaTitle || "Contact Us - Reclaim My Life",
     description:
-      contactPage.seo.metaDescription || "Get in touch with us. We're here to help 24/7.",
+      contactPage.seo.metaDescription || "Get in touch with us. We are here to help 24/7.",
     openGraph: {
       title: contactPage.seo.metaTitle || "Contact Us - Reclaim My Life",
       description: contactPage.seo.metaDescription || "",
@@ -28,9 +30,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Contact() {
+  const { isEnabled } = await draftMode();
   const [contactPage, siteSettings] = await Promise.all([
-    getContactPage(),
-    getSiteSettings(),
+    getContactPage({ preview: isEnabled }),
+    getSiteSettings({ preview: isEnabled }),
   ]);
 
   if (!contactPage) {

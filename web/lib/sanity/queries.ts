@@ -1,5 +1,5 @@
-import { client } from './client';
-import type { AboutPage, ContactPage, HomePage, RegisterPage, SiteSettings } from './types';
+import { getClient } from "./client";
+import type { AboutPage, ContactPage, HomePage, RegisterPage, SiteSettings } from "./types";
 
 // GROQ query for Home Page
 const homePageQuery = `*[_type == "homePage"][0]{
@@ -123,22 +123,22 @@ const registerPageQuery = `*[_type == "registerPage"][0]{
 }`;
 
 // Fetch functions with TypeScript types
-export async function getHomePage(): Promise<HomePage | null> {
-  return await client.fetch(homePageQuery);
+export async function getHomePage(options?: { preview?: boolean }): Promise<HomePage | null> {
+  return await getClient(options).fetch(homePageQuery);
 }
 
-export async function getSiteSettings(): Promise<SiteSettings | null> {
-  return await client.fetch(siteSettingsQuery);
+export async function getSiteSettings(options?: { preview?: boolean }): Promise<SiteSettings | null> {
+  return await getClient(options).fetch(siteSettingsQuery);
 }
 
-export async function getAboutPage(): Promise<AboutPage | null> {
-  return await client.fetch(aboutPageQuery);
+export async function getAboutPage(options?: { preview?: boolean }): Promise<AboutPage | null> {
+  return await getClient(options).fetch(aboutPageQuery);
 }
 
-export async function getContactPage(): Promise<ContactPage | null> {
-  return await client.fetch(contactPageQuery);
+export async function getContactPage(options?: { preview?: boolean }): Promise<ContactPage | null> {
+  return await getClient(options).fetch(contactPageQuery);
 }
 
-export async function getRegisterPage(): Promise<RegisterPage | null> {
-  return await client.fetch(registerPageQuery);
+export async function getRegisterPage(options?: { preview?: boolean }): Promise<RegisterPage | null> {
+  return await getClient(options).fetch(registerPageQuery);
 }

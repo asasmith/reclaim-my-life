@@ -1,11 +1,13 @@
+import type { Metadata } from "next";
+import { draftMode } from "next/headers";
 import PortableText from "@/components/PortableText";
 import { getAboutPage } from "@/lib/sanity/queries";
-import type { Metadata } from "next";
 
-export const revalidate = 300;
+export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const aboutPage = await getAboutPage();
+  const { isEnabled } = await draftMode();
+  const aboutPage = await getAboutPage({ preview: isEnabled });
 
   if (!aboutPage?.seo) {
     return {
@@ -30,7 +32,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function About() {
-  const aboutPage = await getAboutPage();
+  const { isEnabled } = await draftMode();
+  const aboutPage = await getAboutPage({ preview: isEnabled });
 
   if (!aboutPage) {
     return (

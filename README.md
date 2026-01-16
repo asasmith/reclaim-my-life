@@ -97,6 +97,8 @@ Create a `/web/.env.local` file:
 NEXT_PUBLIC_SANITY_PROJECT_ID=your-project-id
 NEXT_PUBLIC_SANITY_DATASET=production
 NEXT_PUBLIC_SANITY_API_VERSION=2024-01-15
+REVALIDATE_SECRET=your-revalidate-secret
+PREVIEW_SECRET=your-preview-secret
 ```
 
 Create a `/studio/.env` file:
@@ -104,6 +106,8 @@ Create a `/studio/.env` file:
 ```bash
 SANITY_STUDIO_PROJECT_ID=your-project-id
 SANITY_STUDIO_DATASET=production
+SANITY_STUDIO_PREVIEW_URL=http://localhost:3000
+SANITY_STUDIO_PREVIEW_SECRET=your-preview-secret
 ```
 
 
@@ -117,34 +121,22 @@ This site uses **Sanity CMS** for content management with **ISR (Incremental Sta
 - **Content Management**: Sanity Studio (`/studio`)
 - **Content Delivery**: Sanity CDN (global, optimized)
 - **Data Fetching**: Server Components with ISR
-- **Revalidation**: 5 minutes (300 seconds)
+- **Revalidation**: webhook + ISR fallback
 
 ### Content Flow
 
 1. **Edit Content**: Make changes in Sanity Studio (http://localhost:3333)
 2. **Publish**: Click "Publish" button in Studio
-3. **Wait**: Changes appear on site within 5 minutes
-4. **Future**: Webhook will trigger instant updates (planned)
+3. **Webhook**: Sanity calls `/api/revalidate` for instant updates
 
-### Revalidation Strategy
+### Preview Mode
 
-**Current (Phase 1):**
-```typescript
-export const revalidate = 300; // 5 minutes
-```
+Editors can view draft content using the Preview tab in Studio.
 
-- Content updates within 5 minutes
-- Good balance of freshness and performance
-- Uses ~8,640 Netlify Functions/month per page
-
-**Future (Phase 2 - Planned):**
-```typescript
-export const revalidate = 3600; // 1 hour
-```
-
-- Add webhook for on-demand revalidation
-- Instant updates when content published
-- 92% reduction in Function usage
+- Set `PREVIEW_SECRET` in `/web/.env.local`
+- Set `SANITY_STUDIO_PREVIEW_URL` and `SANITY_STUDIO_PREVIEW_SECRET` in `/studio/.env`
+- Use the Preview tab on Home/About/Contact/Register documents
+- Exit preview via the banner link on the site
 
 ### CMS Architecture
 
@@ -165,14 +157,15 @@ Content Update Flow:
 ┌─────────────────┐
 │  Next.js ISR    │  5. Fetches data server-side
 │  (Server)       │  6. Generates static HTML
-│                 │  7. Caches for 5 minutes
+│                 │  7. Caches for 1 hour fallback
 └────────┬────────┘
-         │
-         ▼
+          │
+          ▼
 ┌─────────────────┐
 │  Netlify CDN    │  8. Serves cached page (fast!)
-│  (Edge)         │  9. Revalidates after 5 min
+│  (Edge)         │  9. Revalidates on webhook
 └─────────────────┘
+
 ```
 
 ### Key Files

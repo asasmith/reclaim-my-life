@@ -1,32 +1,32 @@
-import { getHomePage } from '@/lib/sanity/queries';
-import SanityImage from '@/components/SanityImage';
-import PortableText from '@/components/PortableText';
-import Link from 'next/link';
-import type { Metadata } from 'next';
+import type { Metadata } from "next";
+import Link from "next/link";
+import { draftMode } from "next/headers";
+import PortableText from "@/components/PortableText";
+import SanityImage from "@/components/SanityImage";
+import { getHomePage } from "@/lib/sanity/queries";
 
-// ISR: Revalidate every 5 minutes (300 seconds)
-// Future: Will increase to 1 hour (3600) and add webhook revalidation
 export const revalidate = 3600;
 
 // Generate dynamic metadata from CMS
 export async function generateMetadata(): Promise<Metadata> {
-  const homePage = await getHomePage();
+  const { isEnabled } = await draftMode();
+  const homePage = await getHomePage({ preview: isEnabled });
 
   if (!homePage?.seo) {
     return {
-      title: 'Reclaim My Life',
-      description: 'A safe, supportive environment for recovery and personal growth',
+      title: "Reclaim My Life",
+      description: "A safe, supportive environment for recovery and personal growth",
     };
   }
 
   return {
-    title: homePage.seo.metaTitle || 'Reclaim My Life',
+    title: homePage.seo.metaTitle || "Reclaim My Life",
     description:
       homePage.seo.metaDescription ||
-      'A safe, supportive environment for recovery and personal growth',
+      "A safe, supportive environment for recovery and personal growth",
     openGraph: {
-      title: homePage.seo.metaTitle || 'Reclaim My Life',
-      description: homePage.seo.metaDescription || '',
+      title: homePage.seo.metaTitle || "Reclaim My Life",
+      description: homePage.seo.metaDescription || "",
       images: homePage.seo.ogImage?.asset?.url
         ? [homePage.seo.ogImage.asset.url]
         : [],
@@ -35,7 +35,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  const homePage = await getHomePage();
+  const { isEnabled } = await draftMode();
+  const homePage = await getHomePage({ preview: isEnabled });
 
   // Error handling: Show message if content not available
   if (!homePage) {

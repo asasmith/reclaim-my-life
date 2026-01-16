@@ -1,11 +1,13 @@
+import type { Metadata } from "next";
+import { draftMode } from "next/headers";
 import RegistrationForm from "@/components/RegistrationForm";
 import { getRegisterPage } from "@/lib/sanity/queries";
-import type { Metadata } from "next";
 
-export const revalidate = 300;
+export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const registerPage = await getRegisterPage();
+  const { isEnabled } = await draftMode();
+  const registerPage = await getRegisterPage({ preview: isEnabled });
 
   if (!registerPage?.seo) {
     return {
@@ -30,7 +32,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Register() {
-  const registerPage = await getRegisterPage();
+  const { isEnabled } = await draftMode();
+  const registerPage = await getRegisterPage({ preview: isEnabled });
 
   if (!registerPage) {
     return (
