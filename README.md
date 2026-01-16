@@ -106,7 +106,6 @@ SANITY_STUDIO_PROJECT_ID=your-project-id
 SANITY_STUDIO_DATASET=production
 ```
 
-See `SANITY_SETUP.md` for detailed CMS setup instructions.
 
 ## CMS Integration
 
@@ -238,19 +237,6 @@ Content Update Flow:
 - First load (after revalidation): ~500-1000ms
 - Cached loads: ~100-300ms
 - Image optimization: WebP/AVIF via Sanity CDN
-
-### Future Enhancements
-
-**Phase 2 (Planned):**
-- [ ] Increase ISR to 1 hour (reduce Function usage)
-- [ ] Add webhook for on-demand revalidation
-- [ ] Instant content updates when published
-- [ ] ~92% reduction in Function usage
-
-**Phase 3 (Optional):**
-- [ ] Draft content preview
-- [ ] Navigation site name from CMS
-- [ ] Social links in footer from CMS
 
 ## Learn More
 
