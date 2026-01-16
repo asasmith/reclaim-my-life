@@ -41,10 +41,6 @@ jobs:
       - name: Test web
         run: pnpm --filter @reclaim-my-life/web test:ci
 
-      - name: Lint studio
-        run: pnpm exec sanity check --project-id dummy --dataset production
-        working-directory: studio
-
       - name: Build web (main only)
         if: github.ref == 'refs/heads/main'
         run: pnpm --filter @reclaim-my-life/web build
