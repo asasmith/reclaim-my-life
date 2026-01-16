@@ -1,45 +1,61 @@
+import PortableText from "@/components/PortableText";
+import { getAboutPage } from "@/lib/sanity/queries";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "About Us - Reclaim My Life",
-  description: "Learn about our mission, values, and approach to supporting recovery.",
-};
+export const revalidate = 300;
 
-export default function About() {
+export async function generateMetadata(): Promise<Metadata> {
+  const aboutPage = await getAboutPage();
+
+  if (!aboutPage?.seo) {
+    return {
+      title: "About Us - Reclaim My Life",
+      description: "Learn about our mission, values, and approach to supporting recovery.",
+    };
+  }
+
+  return {
+    title: aboutPage.seo.metaTitle || "About Us - Reclaim My Life",
+    description:
+      aboutPage.seo.metaDescription ||
+      "Learn about our mission, values, and approach to supporting recovery.",
+    openGraph: {
+      title: aboutPage.seo.metaTitle || "About Us - Reclaim My Life",
+      description: aboutPage.seo.metaDescription || "",
+      images: aboutPage.seo.ogImage?.asset?.url
+        ? [aboutPage.seo.ogImage.asset.url]
+        : [],
+    },
+  };
+}
+
+export default async function About() {
+  const aboutPage = await getAboutPage();
+
+  if (!aboutPage) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-white dark:bg-black">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+            Content not available
+          </h1>
+          <p className="mt-2 text-slate-600 dark:text-slate-400">
+            Please check back later or contact support.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white dark:bg-black">
       <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
         <h1 className="text-4xl font-bold text-slate-900 dark:text-slate-100">
-          About Us
+          {aboutPage.title}
         </h1>
-        
-        <div className="mt-8 space-y-6 text-lg text-slate-700 dark:text-slate-300">
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod 
-            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, 
-            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-          </p>
 
-          <p>
-            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore 
-            eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt 
-            in culpa qui officia deserunt mollit anim id est laborum.
-          </p>
-
-          <h2 className="pt-8 text-2xl font-semibold text-slate-900 dark:text-slate-100">
-            Our Approach
-          </h2>
-
-          <p>
-            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium 
-            doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore 
-            veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-          </p>
-
-          <p>
-            Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, 
-            sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
-          </p>
+        <div className="mt-8">
+          <PortableText value={aboutPage.content} />
         </div>
       </div>
     </div>

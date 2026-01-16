@@ -7,6 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "sanity": "pnpm --filter @reclaim-my-life/studio dev",
+    "sanity:deploy": "pnpm --filter @reclaim-my-life/studio deploy",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
@@ -14,7 +16,12 @@
     "test:ci": "vitest run --coverage"
   },
   "dependencies": {
+    "@portabletext/react": "^6.0.2",
+    "@portabletext/types": "^4.0.1",
+    "@sanity/image-url": "^2.0.2",
+    "@sanity/types": "^5.4.0",
     "next": "16.1.1",
+    "next-sanity": "^12.0.12",
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },
