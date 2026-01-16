@@ -6,7 +6,7 @@ A modern sober living home website built with Next.js and Sanity CMS.
 
 This is a **pnpm workspace monorepo** with two packages:
 
-- **Root workspace** (`/`) - Next.js 16 application with App Router
+- **Web workspace** (`/web`) - Next.js 16 application with App Router
 - **Studio workspace** (`/studio`) - Sanity Studio CMS for content management
 
 ### Technology Stack
@@ -53,6 +53,7 @@ pnpm sanity
 pnpm build              # Build Next.js for production
 pnpm start              # Start production server
 pnpm lint               # Run ESLint
+pnpm sanity:build       # Build Sanity Studio
 pnpm sanity:deploy      # Deploy Sanity Studio to Sanity hosting
 
 # Testing
@@ -68,19 +69,17 @@ This project uses **pnpm workspaces** for clean separation of concerns:
 
 ```
 /
-├── app/                  # Next.js App Router pages and layouts
-├── components/           # React components
-├── lib/                  # Utilities and type definitions
-│   └── sanity/
-│       └── types.ts      # Shared TypeScript types for Sanity content
+├── web/                  # Next.js App Router app
+│   ├── app/              # Routes and layouts
+│   ├── components/       # React components
+│   └── lib/              # Utilities and type definitions
 ├── studio/               # Sanity Studio workspace (separate package)
 │   ├── package.json      # Studio-specific dependencies
-│   ├── node_modules/     # Workspace-linked dependencies
 │   ├── sanity.config.ts  # Sanity configuration
 │   └── schemas/          # CMS content schemas
-├── package.json          # Root workspace (Next.js + shared tools)
+├── package.json          # Root workspace scripts
 ├── pnpm-workspace.yaml   # Workspace configuration
-└── tsconfig.json         # Shared TypeScript config
+└── README.md             # Project overview
 ```
 
 ### Why Workspace Architecture?
@@ -92,7 +91,7 @@ This project uses **pnpm workspaces** for clean separation of concerns:
 
 ## Environment Setup
 
-Create a `.env.local` file in the root:
+Create a `/web/.env.local` file:
 
 ```bash
 NEXT_PUBLIC_SANITY_PROJECT_ID=your-project-id
@@ -194,8 +193,6 @@ Content Update Flow:
 
 ### Testing Content Changes
 
-See `TESTING_CHECKLIST.md` for comprehensive testing guide.
-
 **Quick test:**
 1. Start both servers:
    ```bash
@@ -254,7 +251,6 @@ See `TESTING_CHECKLIST.md` for comprehensive testing guide.
 - [ ] Draft content preview
 - [ ] Navigation site name from CMS
 - [ ] Social links in footer from CMS
-- [ ] Additional content types (About, Contact)
 
 ## Learn More
 

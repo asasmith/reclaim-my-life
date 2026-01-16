@@ -2,7 +2,7 @@
 // These will be used in Batch 2 for type-safe queries
 
 import type { PortableTextBlock } from '@portabletext/types';
-import type { ImageAsset, Slug } from '@sanity/types';
+import type { ImageAsset } from '@sanity/types';
 
 // Image with alt text
 export type SanityImage = {

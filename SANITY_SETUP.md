@@ -26,16 +26,19 @@
 1. **Open `.env.local` in your code editor**
 
 2. **Replace the placeholder:**
-   ```
-   NEXT_PUBLIC_SANITY_PROJECT_ID=REPLACE_WITH_YOUR_PROJECT_ID
-   ```
-   
-   With your actual project ID:
-   ```
-   NEXT_PUBLIC_SANITY_PROJECT_ID=abc123xyz
-   ```
+```
+NEXT_PUBLIC_SANITY_PROJECT_ID=REPLACE_WITH_YOUR_PROJECT_ID
+```
+
+With your actual project ID:
+```
+NEXT_PUBLIC_SANITY_PROJECT_ID=abc123xyz
+```
 
 3. **Save the file**
+
+> Tip: For workspace-local setup, you can also mirror these values in `/web/.env.local`.
+
 
 ## Step 3: Configure CORS (Important!)
 

@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/web/node_modules
 /.pnp
 .pnp.*
 .yarn/*
@@ -16,14 +17,18 @@
 # next.js
 /.next/
 /out/
+/web/.next/
+/web/out/
 
 # sanity
 /.sanity/
 /studio/.sanity/
 /studio/node_modules/
+/web/.sanity/
 
 # production
 /build
+/web/build
 
 # misc
 .DS_Store
