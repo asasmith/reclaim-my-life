@@ -23,7 +23,7 @@
 
 ## Step 2: Update Environment Variables
 
-1. **Open `.env.local` in your code editor**
+1. **Open `/web/.env.local` in your code editor**
 
 2. **Replace the placeholder:**
 ```
@@ -36,8 +36,6 @@ NEXT_PUBLIC_SANITY_PROJECT_ID=abc123xyz
 ```
 
 3. **Save the file**
-
-> Tip: For workspace-local setup, you can also mirror these values in `/web/.env.local`.
 
 
 ## Step 3: Configure CORS (Important!)
@@ -170,6 +168,24 @@ Try these actions to familiarize yourself with the interface:
    - Platform: `Facebook`
    - Profile URL: `https://facebook.com/yourpage`
 5. **Preview:** Click around the different tabs and sections
+
+## Step 7: Enable Revalidation Webhook
+
+1. **Add the secret:** set `REVALIDATE_SECRET` in `/web/.env.local` and your deployment environment.
+
+2. **Create the webhook in Sanity:**
+   - Go to your project → Settings → API → Webhooks
+   - Click "Add webhook"
+   - Name: `Next.js Revalidate`
+   - URL: `https://your-site.com/api/revalidate`
+   - Method: `POST`
+   - Trigger on: `Create`, `Update`, `Publish`
+   - Filter (optional): `_type in ["homePage", "aboutPage", "contactPage", "registerPage"]`
+   - Headers: `x-revalidate-secret: <your secret>`
+
+3. **Save the webhook** and publish content to test the update.
+
+4. **Verify updates:** publish a Home Page change and confirm the site updates immediately.
 
 ## Troubleshooting
 

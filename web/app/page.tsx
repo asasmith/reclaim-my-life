@@ -6,7 +6,7 @@ import type { Metadata } from 'next';
 
 // ISR: Revalidate every 5 minutes (300 seconds)
 // Future: Will increase to 1 hour (3600) and add webhook revalidation
-export const revalidate = 300;
+export const revalidate = 3600;
 
 // Generate dynamic metadata from CMS
 export async function generateMetadata(): Promise<Metadata> {
