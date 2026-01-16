@@ -1,4 +1,4 @@
-name: Test
+name: CI
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  test:
+  checks:
     runs-on: ubuntu-latest
 
     strategy:
@@ -32,17 +32,18 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Run linter
-        run: pnpm lint
+      - name: Lint web
+        run: pnpm --filter @reclaim-my-life/web lint
 
-      - name: Run tests with coverage
-        run: pnpm test:ci
+      - name: Typecheck web
+        run: pnpm --filter @reclaim-my-life/web typecheck
 
-      - name: Upload coverage to Codecov (optional)
-        uses: codecov/codecov-action@v4
-        with:
-          file: ./coverage/lcov.info
-          fail_ci_if_error: false
+      - name: Test web
+        run: pnpm --filter @reclaim-my-life/web test:ci
 
-      - name: Build project
-        run: pnpm build
+      - name: Lint studio
+        run: pnpm --filter @reclaim-my-life/studio lint
+
+      - name: Build web (main only)
+        if: github.ref == 'refs/heads/main'
+        run: pnpm --filter @reclaim-my-life/web build
