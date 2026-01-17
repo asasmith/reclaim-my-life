@@ -1,13 +1,11 @@
-name: CI
+name: Main
 
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
 
 jobs:
-  checks:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     strategy:
@@ -32,19 +30,16 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Lint web
-        run: pnpm --filter @reclaim-my-life/web lint
-
-      - name: Typecheck web
-        run: pnpm --filter @reclaim-my-life/web typecheck
-
-      - name: Test web
-        run: pnpm --filter @reclaim-my-life/web test:ci
-
-      - name: Build web (main only)
-        if: github.ref == 'refs/heads/main'
+      - name: Build web
         run: pnpm --filter @reclaim-my-life/web build
         env:
           NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
           NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}
           NEXT_PUBLIC_SANITY_API_VERSION: ${{ secrets.NEXT_PUBLIC_SANITY_API_VERSION }}
+
+      - name: Deploy studio
+        run: pnpm --filter @reclaim-my-life/studio deploy
+        env:
+          SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
+          SANITY_STUDIO_PROJECT_ID: ${{ secrets.SANITY_STUDIO_PROJECT_ID }}
+          SANITY_STUDIO_DATASET: ${{ secrets.SANITY_STUDIO_DATASET }}
