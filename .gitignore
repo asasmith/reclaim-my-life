@@ -23,6 +23,7 @@
 # sanity
 /.sanity/
 /studio/.sanity/
+/studio/dist/
 /studio/node_modules/
 /web/.sanity/
 

@@ -38,8 +38,10 @@ jobs:
           NEXT_PUBLIC_SANITY_API_VERSION: ${{ secrets.NEXT_PUBLIC_SANITY_API_VERSION }}
 
       - name: Deploy studio
-        run: pnpm --filter @reclaim-my-life/studio deploy
+        run: pnpm --filter @reclaim-my-life/studio run deploy -- $SANITY_STUDIO_HOSTNAME --yes
         env:
-          SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
+          SANITY_AUTH_TOKEN: ${{ secrets.SANITY_DEPLOY_TOKEN }}
           SANITY_STUDIO_PROJECT_ID: ${{ secrets.SANITY_STUDIO_PROJECT_ID }}
           SANITY_STUDIO_DATASET: ${{ secrets.SANITY_STUDIO_DATASET }}
+          SANITY_STUDIO_HOSTNAME: ${{ secrets.SANITY_STUDIO_HOSTNAME }}
+          SANITY_APP_ID: ${{ secrets.SANITY_APP_ID }}
