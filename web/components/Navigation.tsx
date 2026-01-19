@@ -23,11 +23,14 @@ export default function Navigation() {
   };
 
   return (
-    <header className="bg-white shadow-sm dark:bg-zinc-900">
+    <header className="bg-[color:var(--color-background)] shadow-sm">
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
-            <Link href="/" className="text-xl font-bold text-blue-700 dark:text-blue-500">
+            <Link
+              href="/"
+              className="text-xl font-bold text-[color:var(--color-primary)]"
+            >
               Reclaim My Life
             </Link>
           </div>
@@ -38,10 +41,10 @@ export default function Navigation() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-sm font-medium transition-colors hover:text-blue-600 dark:hover:text-blue-400 ${
+                className={`text-sm font-medium transition-colors hover:text-[color:var(--color-accent)] ${
                   pathname === link.href
-                    ? "text-blue-700 dark:text-blue-500"
-                    : "text-slate-700 dark:text-slate-300"
+                    ? "text-[color:var(--color-primary)]"
+                    : "text-[color:var(--color-muted)]"
                 }`}
               >
                 {link.label}
@@ -49,7 +52,7 @@ export default function Navigation() {
             ))}
             <Link
               href="/register"
-              className="rounded-full bg-blue-600 px-6 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600"
+              className="rounded-full bg-[color:var(--color-accent)] px-6 py-2 text-sm font-semibold text-white transition-colors hover:bg-[color:var(--color-accent-secondary)]"
             >
               Register
             </Link>
@@ -59,14 +62,14 @@ export default function Navigation() {
           <div className="flex items-center gap-3 md:hidden">
             <Link
               href="/register"
-              className="rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
+              className="rounded-full bg-[color:var(--color-accent)] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[color:var(--color-accent-secondary)]"
             >
               Register
             </Link>
             <button
               type="button"
               onClick={toggleMobileMenu}
-              className="rounded-md p-2 text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
+              className="rounded-md p-2 text-[color:var(--color-muted)] hover:bg-[color:var(--color-surface)]"
               aria-label="Toggle menu"
             >
               {isMobileMenuOpen ? (
@@ -104,7 +107,7 @@ export default function Navigation() {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="border-t border-slate-200 py-4 dark:border-slate-700 md:hidden">
+          <div className="border-t border-[color:var(--color-border)] py-4 md:hidden">
             <div className="space-y-2">
               {navLinks.map((link) => (
                 <Link
@@ -113,8 +116,8 @@ export default function Navigation() {
                   onClick={closeMobileMenu}
                   className={`block rounded-md px-4 py-2 text-base font-medium transition-colors ${
                     pathname === link.href
-                      ? "bg-blue-50 text-blue-700 dark:bg-blue-900 dark:text-blue-300"
-                      : "text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
+                      ? "bg-[color:var(--color-surface)] text-[color:var(--color-primary)]"
+                      : "text-[color:var(--color-muted)] hover:bg-[color:var(--color-surface)]"
                   }`}
                 >
                   {link.label}

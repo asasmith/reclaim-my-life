@@ -22,7 +22,7 @@ describe("Navigation", () => {
     render(<Navigation />);
 
     const contactLink = screen.getByText("Contact");
-    expect(contactLink.className).toContain("text-blue-700");
+    expect(contactLink.className).toContain("text-[color:var(--color-primary)]");
   });
 
   it("toggles the mobile menu", async () => {

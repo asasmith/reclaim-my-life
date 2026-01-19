@@ -37,12 +37,12 @@ export default async function Register() {
 
   if (!registerPage) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-white dark:bg-black">
+      <div className="flex min-h-screen items-center justify-center bg-[color:var(--color-background)]">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+          <h1 className="text-2xl font-bold text-[color:var(--color-foreground)]">
             Content not available
           </h1>
-          <p className="mt-2 text-slate-600 dark:text-slate-400">
+          <p className="mt-2 text-[color:var(--color-muted)]">
             Please check back later or contact support.
           </p>
         </div>
@@ -51,13 +51,13 @@ export default async function Register() {
   }
 
   return (
-    <div className="bg-white dark:bg-black">
+    <div className="bg-[color:var(--color-background)]">
       <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-slate-900 dark:text-slate-100">
+          <h1 className="text-4xl font-bold text-[color:var(--color-foreground)]">
             {registerPage.title}
           </h1>
-          <p className="mt-4 text-lg text-slate-700 dark:text-slate-300">
+          <p className="mt-4 text-lg text-[color:var(--color-muted)]">
             {registerPage.subtitle}
           </p>
         </div>
@@ -66,11 +66,11 @@ export default async function Register() {
           <RegistrationForm />
         </div>
 
-        <div className="mt-12 rounded-lg bg-blue-50 p-6 dark:bg-slate-800">
-          <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
+        <div className="mt-12 rounded-lg bg-[color:var(--color-surface)] p-6">
+          <h2 className="text-xl font-semibold text-[color:var(--color-foreground)]">
             {registerPage.nextSteps.title}
           </h2>
-          <ul className="mt-4 space-y-3 text-slate-700 dark:text-slate-300">
+          <ul className="mt-4 space-y-3 text-[color:var(--color-muted)]">
             {registerPage.nextSteps.steps.map((step, index) => (
               <li key={`${step.description}-${index}`} className="flex items-start">
                 <span className="mr-2">{index + 1}.</span>

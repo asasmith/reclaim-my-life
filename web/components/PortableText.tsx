@@ -3,45 +3,45 @@ import {
   type PortableTextMarkComponentProps,
   type PortableTextComponentProps,
   PortableText as PortableTextComponent,
-} from '@portabletext/react';
-import type { PortableTextBlock } from '@portabletext/types';
-import Link from 'next/link';
+} from "@portabletext/react";
+import type { PortableTextBlock } from "@portabletext/types";
+import Link from "next/link";
 
 type Props = {
   value: PortableTextBlock[];
 };
 
 type LinkMark = {
-  _type: 'link';
+  _type: "link";
   href?: string;
 };
 
 const components: PortableTextComponents = {
   block: {
     normal: ({ children }: PortableTextComponentProps<PortableTextBlock>) => (
-      <p className="mb-6 text-lg text-slate-700 dark:text-slate-300">
+      <p className="mb-6 text-lg text-[color:var(--color-muted)]">
         {children}
       </p>
     ),
     h2: ({ children }: PortableTextComponentProps<PortableTextBlock>) => (
-      <h2 className="mb-4 mt-8 text-2xl font-bold text-slate-900 dark:text-slate-100">
+      <h2 className="mb-4 mt-8 text-2xl font-bold text-[color:var(--color-foreground)]">
         {children}
       </h2>
     ),
     h3: ({ children }: PortableTextComponentProps<PortableTextBlock>) => (
-      <h3 className="mb-3 mt-6 text-xl font-bold text-slate-900 dark:text-slate-100">
+      <h3 className="mb-3 mt-6 text-xl font-bold text-[color:var(--color-foreground)]">
         {children}
       </h3>
     ),
   },
   list: {
     bullet: ({ children }: PortableTextComponentProps<PortableTextBlock>) => (
-      <ul className="mb-6 ml-6 list-disc space-y-2 text-lg text-slate-700 dark:text-slate-300">
+      <ul className="mb-6 ml-6 list-disc space-y-2 text-lg text-[color:var(--color-muted)]">
         {children}
       </ul>
     ),
     number: ({ children }: PortableTextComponentProps<PortableTextBlock>) => (
-      <ol className="mb-6 ml-6 list-decimal space-y-2 text-lg text-slate-700 dark:text-slate-300">
+      <ol className="mb-6 ml-6 list-decimal space-y-2 text-lg text-[color:var(--color-muted)]">
         {children}
       </ol>
     ),
@@ -62,8 +62,8 @@ const components: PortableTextComponents = {
       <em className="italic">{children}</em>
     ),
     link: ({ value, children }: PortableTextMarkComponentProps<LinkMark>) => {
-      const href = value?.href || '';
-      const isExternal = href.startsWith('http');
+      const href = value?.href || "";
+      const isExternal = href.startsWith("http");
 
       if (isExternal) {
         return (
@@ -71,7 +71,7 @@ const components: PortableTextComponents = {
             href={href}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-600 underline transition-colors hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+            className="text-[color:var(--color-accent)] underline transition-colors hover:text-[color:var(--color-accent-secondary)]"
           >
             {children}
           </a>
@@ -81,7 +81,7 @@ const components: PortableTextComponents = {
       return (
         <Link
           href={href}
-          className="text-blue-600 underline transition-colors hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+          className="text-[color:var(--color-accent)] underline transition-colors hover:text-[color:var(--color-accent-secondary)]"
         >
           {children}
         </Link>
