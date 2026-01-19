@@ -37,12 +37,12 @@ export default async function About() {
 
   if (!aboutPage) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-white dark:bg-black">
+      <div className="flex min-h-screen items-center justify-center bg-[color:var(--color-background)]">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+          <h1 className="text-2xl font-bold text-[color:var(--color-foreground)]">
             Content not available
           </h1>
-          <p className="mt-2 text-slate-600 dark:text-slate-400">
+          <p className="mt-2 text-[color:var(--color-muted)]">
             Please check back later or contact support.
           </p>
         </div>
@@ -51,9 +51,9 @@ export default async function About() {
   }
 
   return (
-    <div className="bg-white dark:bg-black">
+    <div className="bg-[color:var(--color-background)]">
       <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-slate-900 dark:text-slate-100">
+        <h1 className="text-4xl font-bold text-[color:var(--color-foreground)]">
           {aboutPage.title}
         </h1>
 

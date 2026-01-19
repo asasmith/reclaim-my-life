@@ -71,14 +71,14 @@ export default async function Home() {
               <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6 lg:justify-start">
                 <Link
                   href={homePage.hero.primaryButton.url}
-                  className="w-full sm:w-auto rounded-full bg-blue-600 px-8 py-3 text-center text-lg font-semibold text-white transition-colors hover:bg-blue-700"
+                  className="w-full sm:w-auto rounded-full bg-[color:var(--color-accent)] px-8 py-3 text-center text-lg font-semibold text-white transition-colors hover:bg-[color:var(--color-accent-secondary)]"
                 >
                   {homePage.hero.primaryButton.text}
                 </Link>
                 {homePage.hero.secondaryButton && (
                   <Link
                     href={homePage.hero.secondaryButton.url}
-                    className="w-full sm:w-auto rounded-full border-2 border-blue-600 px-8 py-3 text-center text-lg font-semibold text-blue-600 transition-colors hover:bg-blue-50 dark:border-blue-500 dark:text-blue-500 dark:hover:bg-slate-800"
+                    className="w-full sm:w-auto rounded-full border-2 border-[color:var(--color-accent)] px-8 py-3 text-center text-lg font-semibold text-[color:var(--color-accent)] transition-colors hover:bg-[color:var(--color-surface)]"
                   >
                     {homePage.hero.secondaryButton.text}
                   </Link>
@@ -113,17 +113,17 @@ export default async function Home() {
       </section>
 
       {/* Call to Action Section */}
-      <section className="bg-blue-600 dark:bg-blue-800">
+      <section className="bg-[color:var(--color-primary)]">
         <div className="mx-auto max-w-4xl px-4 py-16 text-center sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-white">
             {homePage.ctaSection.title}
           </h2>
-          <p className="mt-4 text-xl text-blue-100">
+          <p className="mt-4 text-xl text-white/80">
             {homePage.ctaSection.subtitle}
           </p>
           <Link
             href={homePage.ctaSection.button.url}
-            className="mt-8 inline-block rounded-full bg-white px-8 py-3 text-lg font-semibold text-blue-600 transition-colors hover:bg-blue-50"
+            className="mt-8 inline-block rounded-full bg-white px-8 py-3 text-lg font-semibold text-[color:var(--color-primary)] transition-colors hover:bg-[color:var(--color-surface)]"
           >
             {homePage.ctaSection.button.text}
           </Link>

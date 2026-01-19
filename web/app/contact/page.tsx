@@ -38,12 +38,12 @@ export default async function Contact() {
 
   if (!contactPage) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-white dark:bg-black">
+      <div className="flex min-h-screen items-center justify-center bg-[color:var(--color-background)]">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+          <h1 className="text-2xl font-bold text-[color:var(--color-foreground)]">
             Content not available
           </h1>
-          <p className="mt-2 text-slate-600 dark:text-slate-400">
+          <p className="mt-2 text-[color:var(--color-muted)]">
             Please check back later or contact support.
           </p>
         </div>
@@ -54,46 +54,46 @@ export default async function Contact() {
   const contactInfo = siteSettings?.contactInfo;
 
   return (
-    <div className="bg-white dark:bg-black">
+    <div className="bg-[color:var(--color-background)]">
       <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-slate-900 dark:text-slate-100">
+        <h1 className="text-4xl font-bold text-[color:var(--color-foreground)]">
           {contactPage.title}
         </h1>
 
         <div className="mt-8 grid gap-8 md:grid-cols-2">
           <div>
-            <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">
+            <h2 className="text-2xl font-semibold text-[color:var(--color-foreground)]">
               Get in Touch
             </h2>
-            <p className="mt-4 text-lg text-slate-700 dark:text-slate-300">
+            <p className="mt-4 text-lg text-[color:var(--color-muted)]">
               {contactPage.introText}
             </p>
 
             <div className="mt-8 space-y-4">
               {contactInfo?.phone && (
                 <div>
-                  <h3 className="font-semibold text-slate-900 dark:text-slate-100">
+                  <h3 className="font-semibold text-[color:var(--color-foreground)]">
                     Phone
                   </h3>
-                  <p className="text-slate-700 dark:text-slate-300">{contactInfo.phone}</p>
+                  <p className="text-[color:var(--color-muted)]">{contactInfo.phone}</p>
                 </div>
               )}
 
               {contactInfo?.email && (
                 <div>
-                  <h3 className="font-semibold text-slate-900 dark:text-slate-100">
+                  <h3 className="font-semibold text-[color:var(--color-foreground)]">
                     Email
                   </h3>
-                  <p className="text-slate-700 dark:text-slate-300">{contactInfo.email}</p>
+                  <p className="text-[color:var(--color-muted)]">{contactInfo.email}</p>
                 </div>
               )}
 
               {contactInfo?.address && (
                 <div>
-                  <h3 className="font-semibold text-slate-900 dark:text-slate-100">
+                  <h3 className="font-semibold text-[color:var(--color-foreground)]">
                     Address
                   </h3>
-                  <p className="text-slate-700 dark:text-slate-300">
+                  <p className="text-[color:var(--color-muted)]">
                     {contactInfo.address.street}
                     <br />
                     {contactInfo.address.city}, {contactInfo.address.state} {contactInfo.address.zip}
@@ -102,21 +102,21 @@ export default async function Contact() {
               )}
 
               <div>
-                <h3 className="font-semibold text-slate-900 dark:text-slate-100">Hours</h3>
-                <p className="text-slate-700 dark:text-slate-300">24/7 Support Available</p>
+                <h3 className="font-semibold text-[color:var(--color-foreground)]">Hours</h3>
+                <p className="text-[color:var(--color-muted)]">24/7 Support Available</p>
               </div>
             </div>
           </div>
 
-          <div className="rounded-lg bg-slate-50 p-8 dark:bg-zinc-900">
-            <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">
+          <div className="rounded-lg bg-[color:var(--color-surface)] p-8">
+            <h2 className="text-2xl font-semibold text-[color:var(--color-foreground)]">
               {contactPage.formTitle}
             </h2>
             <form className="mt-6 space-y-4">
               <div>
                 <label
                   htmlFor="name"
-                  className="block text-sm font-medium text-slate-700 dark:text-slate-300"
+                  className="block text-sm font-medium text-[color:var(--color-muted)]"
                 >
                   Name
                 </label>
@@ -124,14 +124,14 @@ export default async function Contact() {
                   type="text"
                   id="name"
                   name="name"
-                  className="mt-1 w-full rounded-md border border-slate-300 px-4 py-2 dark:border-slate-700 dark:bg-zinc-800"
+                  className="mt-1 w-full rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-background)] px-4 py-2 text-[color:var(--color-foreground)]"
                 />
               </div>
 
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-slate-700 dark:text-slate-300"
+                  className="block text-sm font-medium text-[color:var(--color-muted)]"
                 >
                   Email
                 </label>
@@ -139,14 +139,14 @@ export default async function Contact() {
                   type="email"
                   id="email"
                   name="email"
-                  className="mt-1 w-full rounded-md border border-slate-300 px-4 py-2 dark:border-slate-700 dark:bg-zinc-800"
+                  className="mt-1 w-full rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-background)] px-4 py-2 text-[color:var(--color-foreground)]"
                 />
               </div>
 
               <div>
                 <label
                   htmlFor="message"
-                  className="block text-sm font-medium text-slate-700 dark:text-slate-300"
+                  className="block text-sm font-medium text-[color:var(--color-muted)]"
                 >
                   Message
                 </label>
@@ -154,13 +154,13 @@ export default async function Contact() {
                   id="message"
                   name="message"
                   rows={4}
-                  className="mt-1 w-full rounded-md border border-slate-300 px-4 py-2 dark:border-slate-700 dark:bg-zinc-800"
+                  className="mt-1 w-full rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-background)] px-4 py-2 text-[color:var(--color-foreground)]"
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full rounded-md bg-blue-600 px-4 py-2 font-semibold text-white transition-colors hover:bg-blue-700"
+                className="w-full rounded-md bg-[color:var(--color-accent)] px-4 py-2 font-semibold text-white transition-colors hover:bg-[color:var(--color-accent-secondary)]"
               >
                 Send Message
               </button>
