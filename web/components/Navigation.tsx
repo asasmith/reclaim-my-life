@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -27,11 +28,15 @@ export default function Navigation() {
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
-            <Link
-              href="/"
-              className="text-xl font-bold text-[color:var(--color-primary)]"
-            >
-              Reclaim My Life
+            <Link href="/" className="block">
+              <Image
+                src="/reclaiming_my_life_text_logo.svg"
+                alt="Reclaim My Life"
+                width={240}
+                height={48}
+                className="h-12 w-auto"
+                priority
+              />
             </Link>
           </div>
 
