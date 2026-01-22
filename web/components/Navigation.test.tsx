@@ -11,7 +11,9 @@ describe("Navigation", () => {
     mockUsePathname.mockReturnValue("/");
     render(<Navigation />);
 
-    expect(screen.getByText("Reclaim My Life")).toBeInTheDocument();
+    expect(
+      screen.getByRole("img", { name: "Reclaim My Life" })
+    ).toBeInTheDocument();
     expect(screen.getByText("Home")).toBeInTheDocument();
     expect(screen.getByText("About")).toBeInTheDocument();
     expect(screen.getByText("Contact")).toBeInTheDocument();
