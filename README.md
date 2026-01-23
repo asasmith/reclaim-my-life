@@ -1,3 +1,5 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/0d3ed6b2-de05-4de1-a28d-74b03b1f03e7/deploy-status)](https://app.netlify.com/projects/reclaim-my-life/deploys)
+
 # Reclaim My Life
 
 A modern sober living home website built with Next.js and Sanity CMS.
