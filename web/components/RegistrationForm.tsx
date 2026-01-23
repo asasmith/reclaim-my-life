@@ -1,73 +1,102 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 
-type FormData = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  dateOfBirth: string;
-  preferredMoveInDate: string;
-  emergencyContact: string;
-  emergencyPhone: string;
-  referralSource: string;
-  additionalInfo: string;
-};
+import type { RegisterFormField } from "@/lib/sanity/types";
 
-export default function RegistrationForm() {
-  const [formData, setFormData] = useState<FormData>({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    dateOfBirth: "",
-    preferredMoveInDate: "",
-    emergencyContact: "",
-    emergencyPhone: "",
-    referralSource: "",
-    additionalInfo: "",
-  });
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+type RegistrationFormProps = Readonly<{
+  formFields: RegisterFormField[] | null | undefined;
+  isPreview?: boolean;
+  thankYou?: {
+    title: string;
+    message: string;
   };
+}>;
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+type SubmitStatus = "idle" | "success" | "error";
+
+// Keep in sync with normalizeFieldKey in studio/schemas/registerPage.ts.
+const normalizeFieldKey = (value: string) =>
+  value
+    .toLowerCase()
+    .trim()
+    .replace(/[_\s]+/g, "-")
+    .replace(/[^a-z0-9-]/g, "")
+    .replace(/-{2,}/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+const isFullWidth = (type: RegisterFormField["type"]) =>
+  type === "textarea" || type === "radio" || type === "checkbox";
+
+const getNormalizedFields = (formFields: RegisterFormField[]) =>
+  formFields
+    .map((field) => ({
+      ...field,
+      normalizedKey: normalizeFieldKey(field.fieldKey || field.label || ""),
+    }))
+    .filter((field) => field.normalizedKey.length > 0);
+
+export default function RegistrationForm({
+  formFields,
+  isPreview,
+  thankYou,
+}: RegistrationFormProps) {
+  const formRef = useRef<HTMLFormElement | null>(null);
+  const [submitStatus, setSubmitStatus] = useState<SubmitStatus>("idle");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  if (!formFields && isPreview) {
+    return (
+      <div className="rounded-lg bg-[color:var(--color-surface)] p-8 text-center text-[color:var(--color-muted)]">
+        Loading draft form fields...
+      </div>
+    );
+  }
+
+  const fields = getNormalizedFields(formFields ?? []);
+
+  if (fields.length === 0) {
+    return (
+      <div className="rounded-lg bg-[color:var(--color-surface)] p-8 text-center text-[color:var(--color-muted)]">
+        Form fields are empty. Please add fields in the Register Page document.
+      </div>
+    );
+  }
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus("idle");
 
+    if (!formRef.current) {
+      setIsSubmitting(false);
+      setSubmitStatus("error");
+      return;
+    }
+
+    const formData = new FormData(formRef.current);
+
     try {
-      // TODO: Replace with actual form submission service (Formspree, Web3Forms, etc.)
-      console.log("Form data:", formData);
-      
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      
-      setSubmitStatus("success");
-      
-      // Reset form after successful submission
-      setFormData({
-        firstName: "",
-        lastName: "",
-        email: "",
-        phone: "",
-        dateOfBirth: "",
-        preferredMoveInDate: "",
-        emergencyContact: "",
-        emergencyPhone: "",
-        referralSource: "",
-        additionalInfo: "",
+      const params = new URLSearchParams();
+
+      formData.forEach((value, key) => {
+        params.append(key, String(value));
       });
+
+      const response = await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: params.toString(),
+      });
+
+      if (!response.ok) {
+        throw new Error("Submission failed");
+      }
+
+      formRef.current.reset();
+      setSubmitStatus("success");
     } catch (error) {
-      console.error("Form submission error:", error);
+      console.error("Registration submission failed", error);
       setSubmitStatus("error");
     } finally {
       setIsSubmitting(false);
@@ -75,217 +104,175 @@ export default function RegistrationForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8 rounded-lg bg-[color:var(--color-surface)] p-8">
-      {/* Personal Information */}
-      <div>
-        <h2 className="text-2xl font-semibold text-[color:var(--color-foreground)]">
-          Personal Information
-        </h2>
-        <div className="mt-6 grid gap-6 md:grid-cols-2">
-          <div>
-            <label
-              htmlFor="firstName"
-              className="block text-sm font-medium text-[color:var(--color-muted)]"
-            >
-              First Name <span className="text-[color:var(--color-accent)]">*</span>
-            </label>
-            <input
-              type="text"
-              id="firstName"
-              name="firstName"
-              required
-              value={formData.firstName}
-              onChange={handleChange}
-              className="mt-1 w-full rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-background)] px-4 py-2 text-[color:var(--color-foreground)] focus:border-[color:var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-accent)]"
-            />
-          </div>
+    <form
+      ref={formRef}
+      name="registration"
+      method="POST"
+      data-netlify="true"
+      data-netlify-honeypot="bot-field"
+      data-netlify-recaptcha="true"
+      onSubmit={handleSubmit}
+      className="space-y-8 rounded-lg bg-[color:var(--color-surface)] p-8"
+    >
+      <input type="hidden" name="form-name" value="registration" />
+      <label
+        className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden"
+        htmlFor="bot-field"
+      >
+        Do not fill this out
+      </label>
+      <input
+        id="bot-field"
+        name="bot-field"
+        type="text"
+        tabIndex={-1}
+        autoComplete="off"
+        className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden"
+      />
 
-          <div>
-            <label
-              htmlFor="lastName"
-              className="block text-sm font-medium text-[color:var(--color-muted)]"
-            >
-              Last Name <span className="text-[color:var(--color-accent)]">*</span>
-            </label>
-            <input
-              type="text"
-              id="lastName"
-              name="lastName"
-              required
-              value={formData.lastName}
-              onChange={handleChange}
-              className="mt-1 w-full rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-background)] px-4 py-2 text-[color:var(--color-foreground)] focus:border-[color:var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-accent)]"
-            />
-          </div>
+      <div className="grid gap-6 md:grid-cols-2">
+        {fields.map((field) => {
+          const fieldId = field.normalizedKey;
+          const requiredMark = field.required ? (
+            <span className="text-[color:var(--color-accent)]">*</span>
+          ) : null;
+          const fieldWrapperClass = isFullWidth(field.type)
+            ? "space-y-2 md:col-span-2"
+            : "space-y-2";
 
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-[color:var(--color-muted)]"
-            >
-              Email <span className="text-[color:var(--color-accent)]">*</span>
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              required
-              value={formData.email}
-              onChange={handleChange}
-              className="mt-1 w-full rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-background)] px-4 py-2 text-[color:var(--color-foreground)] focus:border-[color:var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-accent)]"
-            />
-          </div>
+          if (field.type === "textarea") {
+            return (
+              <div key={fieldId} className={fieldWrapperClass}>
+                <label
+                  htmlFor={fieldId}
+                  className="block text-sm font-medium text-[color:var(--color-muted)]"
+                >
+                  {field.label} {requiredMark}
+                </label>
+                <textarea
+                  id={fieldId}
+                  name={fieldId}
+                  rows={4}
+                  required={field.required}
+                  placeholder={field.placeholder}
+                  className="mt-1 w-full rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-background)] px-4 py-2 text-[color:var(--color-foreground)] focus:border-[color:var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-accent)]"
+                />
+                {field.helpText ? (
+                  <p className="text-sm text-[color:var(--color-muted)]">{field.helpText}</p>
+                ) : null}
+              </div>
+            );
+          }
 
-          <div>
-            <label
-              htmlFor="phone"
-              className="block text-sm font-medium text-[color:var(--color-muted)]"
-            >
-              Phone Number <span className="text-[color:var(--color-accent)]">*</span>
-            </label>
-            <input
-              type="tel"
-              id="phone"
-              name="phone"
-              required
-              value={formData.phone}
-              onChange={handleChange}
-              className="mt-1 w-full rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-background)] px-4 py-2 text-[color:var(--color-foreground)] focus:border-[color:var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-accent)]"
-            />
-          </div>
+          if (field.type === "select") {
+            return (
+              <div key={fieldId} className={fieldWrapperClass}>
+                <label
+                  htmlFor={fieldId}
+                  className="block text-sm font-medium text-[color:var(--color-muted)]"
+                >
+                  {field.label} {requiredMark}
+                </label>
+                <select
+                  id={fieldId}
+                  name={fieldId}
+                  required={field.required}
+                  className="mt-1 w-full rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-background)] px-4 py-2 text-[color:var(--color-foreground)] focus:border-[color:var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-accent)]"
+                >
+                  <option value="">Select an option</option>
+                  {(field.options ?? []).map((option) => (
+                    <option key={`${fieldId}-${option}`} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+                {field.helpText ? (
+                  <p className="text-sm text-[color:var(--color-muted)]">{field.helpText}</p>
+                ) : null}
+              </div>
+            );
+          }
 
-          <div>
-            <label
-              htmlFor="dateOfBirth"
-              className="block text-sm font-medium text-[color:var(--color-muted)]"
-            >
-              Date of Birth <span className="text-[color:var(--color-accent)]">*</span>
-            </label>
-            <input
-              type="date"
-              id="dateOfBirth"
-              name="dateOfBirth"
-              required
-              value={formData.dateOfBirth}
-              onChange={handleChange}
-              className="mt-1 w-full rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-background)] px-4 py-2 text-[color:var(--color-foreground)] focus:border-[color:var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-accent)]"
-            />
-          </div>
+          if (field.type === "radio") {
+            return (
+              <fieldset key={fieldId} className={fieldWrapperClass}>
+                <legend className="block text-sm font-medium text-[color:var(--color-muted)]">
+                  {field.label} {requiredMark}
+                </legend>
+                <div className="mt-3 space-y-2">
+                  {(field.options ?? []).map((option, index) => {
+                    const optionId = `${fieldId}-${index}`;
+                    return (
+                      <label key={optionId} className="flex items-center gap-3">
+                        <input
+                          id={optionId}
+                          type="radio"
+                          name={fieldId}
+                          value={option}
+                          required={field.required && index === 0}
+                          className="h-4 w-4 border-[color:var(--color-border)] text-[color:var(--color-accent)] focus:ring-[color:var(--color-accent)]"
+                        />
+                        <span className="text-[color:var(--color-foreground)]">{option}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+                {field.helpText ? (
+                  <p className="mt-2 text-sm text-[color:var(--color-muted)]">{field.helpText}</p>
+                ) : null}
+              </fieldset>
+            );
+          }
 
-          <div>
-            <label
-              htmlFor="preferredMoveInDate"
-              className="block text-sm font-medium text-[color:var(--color-muted)]"
-            >
-              Preferred Move-In Date
-            </label>
-            <input
-              type="date"
-              id="preferredMoveInDate"
-              name="preferredMoveInDate"
-              value={formData.preferredMoveInDate}
-              onChange={handleChange}
-              className="mt-1 w-full rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-background)] px-4 py-2 text-[color:var(--color-foreground)] focus:border-[color:var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-accent)]"
-            />
-          </div>
-        </div>
+          if (field.type === "checkbox") {
+            return (
+              <div key={fieldId} className={fieldWrapperClass}>
+                <label className="flex items-start gap-3">
+                  <input
+                    id={fieldId}
+                    type="checkbox"
+                    name={fieldId}
+                    value="yes"
+                    required={field.required}
+                    className="self-center h-4 w-4 rounded border-[color:var(--color-border)] text-[color:var(--color-accent)] focus:ring-[color:var(--color-accent)]"
+                  />
+                  <span className="text-sm font-medium text-[color:var(--color-muted)]">
+                    {field.label} {requiredMark}
+                  </span>
+                </label>
+                {field.helpText ? (
+                  <p className="text-sm text-[color:var(--color-muted)]">{field.helpText}</p>
+                ) : null}
+              </div>
+            );
+          }
+
+          return (
+            <div key={fieldId} className={fieldWrapperClass}>
+              <label
+                htmlFor={fieldId}
+                className="block text-sm font-medium text-[color:var(--color-muted)]"
+              >
+                {field.label} {requiredMark}
+              </label>
+              <input
+                id={fieldId}
+                type={field.type}
+                name={fieldId}
+                required={field.required}
+                placeholder={field.placeholder}
+                className="mt-1 w-full rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-background)] px-4 py-2 text-[color:var(--color-foreground)] focus:border-[color:var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-accent)]"
+              />
+              {field.helpText ? (
+                <p className="text-sm text-[color:var(--color-muted)]">{field.helpText}</p>
+              ) : null}
+            </div>
+          );
+        })}
       </div>
 
-      {/* Emergency Contact */}
-      <div>
-        <h2 className="text-2xl font-semibold text-[color:var(--color-foreground)]">
-          Emergency Contact
-        </h2>
-        <div className="mt-6 grid gap-6 md:grid-cols-2">
-          <div>
-            <label
-              htmlFor="emergencyContact"
-              className="block text-sm font-medium text-[color:var(--color-muted)]"
-            >
-              Emergency Contact Name <span className="text-[color:var(--color-accent)]">*</span>
-            </label>
-            <input
-              type="text"
-              id="emergencyContact"
-              name="emergencyContact"
-              required
-              value={formData.emergencyContact}
-              onChange={handleChange}
-              className="mt-1 w-full rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-background)] px-4 py-2 text-[color:var(--color-foreground)] focus:border-[color:var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-accent)]"
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="emergencyPhone"
-              className="block text-sm font-medium text-[color:var(--color-muted)]"
-            >
-              Emergency Contact Phone <span className="text-[color:var(--color-accent)]">*</span>
-            </label>
-            <input
-              type="tel"
-              id="emergencyPhone"
-              name="emergencyPhone"
-              required
-              value={formData.emergencyPhone}
-              onChange={handleChange}
-              className="mt-1 w-full rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-background)] px-4 py-2 text-[color:var(--color-foreground)] focus:border-[color:var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-accent)]"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Additional Information */}
-      <div>
-        <h2 className="text-2xl font-semibold text-[color:var(--color-foreground)]">
-          Additional Information
-        </h2>
-        <div className="mt-6 space-y-6">
-          <div>
-            <label
-              htmlFor="referralSource"
-              className="block text-sm font-medium text-[color:var(--color-muted)]"
-            >
-              How did you hear about us?
-            </label>
-            <select
-              id="referralSource"
-              name="referralSource"
-              value={formData.referralSource}
-              onChange={handleChange}
-              className="mt-1 w-full rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-background)] px-4 py-2 text-[color:var(--color-foreground)] focus:border-[color:var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-accent)]"
-            >
-              <option value="">Select an option</option>
-              <option value="search">Search Engine</option>
-              <option value="social">Social Media</option>
-              <option value="referral">Friend/Family Referral</option>
-              <option value="professional">Healthcare Professional</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-
-          <div>
-            <label
-              htmlFor="additionalInfo"
-              className="block text-sm font-medium text-[color:var(--color-muted)]"
-            >
-              Additional Information or Questions
-            </label>
-            <textarea
-              id="additionalInfo"
-              name="additionalInfo"
-              rows={4}
-              value={formData.additionalInfo}
-              onChange={handleChange}
-              placeholder="Please share anything else you'd like us to know..."
-              className="mt-1 w-full rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-background)] px-4 py-2 text-[color:var(--color-foreground)] focus:border-[color:var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-accent)]"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Submit Button and Status Messages */}
-      <div>
+      <div className="space-y-4">
+        {submitStatus !== "success" ? <div data-netlify-recaptcha="true"></div> : null}
         <button
           type="submit"
           disabled={isSubmitting}
@@ -293,21 +280,21 @@ export default function RegistrationForm() {
         >
           {isSubmitting ? "Submitting..." : "Submit Registration"}
         </button>
-
-        {submitStatus === "success" && (
-          <div
-            className="mt-4 rounded-md bg-[color:var(--color-surface)] p-4 text-[color:var(--color-foreground)]"
-            data-testid="registration-success"
-          >
-            Thank you for your registration! We'll contact you within 24 hours.
+        {submitStatus === "success" ? (
+          <div className="rounded-md border border-[color:var(--color-accent-secondary)] bg-[color:var(--color-accent-secondary)/0.1] px-4 py-3 text-[color:var(--color-foreground)]">
+            <p className="text-base font-semibold">
+              {thankYou?.title ?? "Thank you for registering."}
+            </p>
+            <p className="mt-1 text-sm text-[color:var(--color-muted)]">
+              {thankYou?.message ?? "We'll reach out within 24 hours to confirm next steps."}
+            </p>
           </div>
-        )}
-
-        {submitStatus === "error" && (
-          <div className="mt-4 rounded-md bg-[color:var(--color-surface)] p-4 text-[color:var(--color-foreground)]">
-            There was an error submitting your registration. Please try again or contact us directly.
-          </div>
-        )}
+        ) : null}
+        {submitStatus === "error" ? (
+          <p className="text-sm text-[color:var(--color-muted)]">
+            We couldn't submit your registration. Please try again or contact us directly.
+          </p>
+        ) : null}
       </div>
     </form>
   );
