@@ -68,26 +68,10 @@ export default async function Home() {
               <p className="mx-auto mt-6 max-w-2xl text-lg sm:text-xl text-slate-700 dark:text-slate-300 lg:mx-0">
                 {homePage.hero.subtitle}
               </p>
-              <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6 lg:justify-start">
-                <Link
-                  href={homePage.hero.primaryButton.url}
-                  className="w-full sm:w-auto rounded-full bg-[color:var(--color-accent)] px-8 py-3 text-center text-lg font-semibold text-white transition-colors hover:bg-[color:var(--color-accent-secondary)]"
-                >
-                  {homePage.hero.primaryButton.text}
-                </Link>
-                {homePage.hero.secondaryButton && (
-                  <Link
-                    href={homePage.hero.secondaryButton.url}
-                    className="w-full sm:w-auto rounded-full border-2 border-[color:var(--color-accent)] px-8 py-3 text-center text-lg font-semibold text-[color:var(--color-accent)] transition-colors hover:bg-[color:var(--color-surface)]"
-                  >
-                    {homePage.hero.secondaryButton.text}
-                  </Link>
-                )}
-              </div>
             </div>
 
             {/* Hero Image */}
-            <div className="relative h-64 sm:h-80 lg:h-full lg:min-h-[500px]">
+            <div className="relative h-64 sm:h-80 lg:h-full lg:min-h-[500px] lg:row-span-2">
               <SanityImage
                 image={homePage.hero.image}
                 fill
@@ -95,6 +79,24 @@ export default async function Home() {
                 priority
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
+            </div>
+
+            {/* Hero CTAs */}
+            <div className="mt-2 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6 lg:mt-10 lg:items-start lg:justify-start">
+              <Link
+                href={homePage.hero.primaryButton.url}
+                className="w-full sm:w-auto rounded-full bg-[color:var(--color-accent)] px-8 py-3 text-center text-lg font-semibold text-white transition-colors hover:bg-[color:var(--color-accent-secondary)]"
+              >
+                {homePage.hero.primaryButton.text}
+              </Link>
+              {homePage.hero.secondaryButton && (
+                <Link
+                  href={homePage.hero.secondaryButton.url}
+                  className="w-full sm:w-auto rounded-full border-2 border-[color:var(--color-accent)] px-8 py-3 text-center text-lg font-semibold text-[color:var(--color-accent)] transition-colors hover:bg-[color:var(--color-surface)]"
+                >
+                  {homePage.hero.secondaryButton.text}
+                </Link>
+              )}
             </div>
           </div>
         </div>
