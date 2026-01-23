@@ -63,7 +63,11 @@ export default async function Register() {
         </div>
 
         <div className="mt-12">
-          <RegistrationForm />
+          <RegistrationForm
+            formFields={registerPage.formFields}
+            isPreview={isEnabled}
+            thankYou={registerPage.thankYou}
+          />
         </div>
 
         <div className="mt-12 rounded-lg bg-[color:var(--color-surface)] p-6">

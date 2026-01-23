@@ -104,6 +104,19 @@ const contactPageQuery = `*[_type == "contactPage"][0]{
 const registerPageQuery = `*[_type == "registerPage"][0]{
   title,
   subtitle,
+  formFields[] {
+    fieldKey,
+    label,
+    type,
+    required,
+    placeholder,
+    helpText,
+    options
+  },
+  thankYou {
+    title,
+    message
+  },
   nextSteps {
     title,
     steps[] {

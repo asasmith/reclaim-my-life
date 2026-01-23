@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Registration Form</title>
+  </head>
+  <body>
+    <form
+      name="registration"
+      method="POST"
+      data-netlify="true"
+      data-netlify-honeypot="bot-field"
+      data-netlify-recaptcha="true"
+      style="display: none"
+    >
+      <input type="hidden" name="form-name" value="registration" />
+      <input
+        id="bot-field"
+        name="bot-field"
+        type="text"
+        tabindex="-1"
+        autocomplete="off"
+        style="display: none"
+      />
+      <input type="text" name="placeholder" style="display: none" />
+      <div data-netlify-recaptcha="true"></div>
+    </form>
+  </body>
+</html>
