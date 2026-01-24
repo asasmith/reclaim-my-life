@@ -121,6 +121,7 @@ export default function ContactForm({ formTitle }: ContactFormProps) {
             type="text"
             id="name"
             name="name"
+            autoComplete="name"
             required
             className="mt-1 w-full rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-background)] px-4 py-2 text-[color:var(--color-foreground)] focus:border-[color:var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-accent)]"
           />

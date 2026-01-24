@@ -43,6 +43,23 @@ describe("ContactForm", () => {
     expect(fetchSpy).not.toHaveBeenCalled();
   });
 
+  it("clears contact info validation error when email or phone changes", async () => {
+    const user = userEvent.setup();
+
+    render(<ContactForm formTitle="Reach Out" />);
+
+    await fillRequiredFields(user);
+    await user.click(screen.getByRole("button", { name: "Send Message" }));
+
+    expect(await screen.findByText("Please provide an email or phone number.")).toBeInTheDocument();
+
+    await user.type(screen.getByLabelText(/Phone/), "555-123-4567");
+
+    await waitFor(() => {
+      expect(screen.queryByText("Please provide an email or phone number.")).toBeNull();
+    });
+  });
+
   it("submits the form and shows success message", async () => {
     const user = userEvent.setup();
     const fetchSpy = vi.fn().mockResolvedValue({ ok: true });
