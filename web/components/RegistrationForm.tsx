@@ -47,7 +47,7 @@ export default function RegistrationForm({
 
   if (!formFields && isPreview) {
     return (
-      <div className="rounded-lg bg-[color:var(--color-surface)] p-8 text-center text-[color:var(--color-muted)]">
+      <div className="rounded-lg bg-surface p-8 text-center text-muted">
         Loading draft form fields...
       </div>
     );
@@ -57,7 +57,7 @@ export default function RegistrationForm({
 
   if (fields.length === 0) {
     return (
-      <div className="rounded-lg bg-[color:var(--color-surface)] p-8 text-center text-[color:var(--color-muted)]">
+      <div className="rounded-lg bg-surface p-8 text-center text-muted">
         Form fields are empty. Please add fields in the Register Page document.
       </div>
     );
@@ -112,7 +112,7 @@ export default function RegistrationForm({
       data-netlify-honeypot="bot-field"
       data-netlify-recaptcha="true"
       onSubmit={handleSubmit}
-      className="space-y-8 rounded-lg bg-[color:var(--color-surface)] p-8"
+      className="space-y-8 rounded-lg bg-surface p-8"
     >
       <input type="hidden" name="form-name" value="registration" />
       <label
@@ -134,7 +134,7 @@ export default function RegistrationForm({
         {fields.map((field) => {
           const fieldId = field.normalizedKey;
           const requiredMark = field.required ? (
-            <span className="text-[color:var(--color-accent)]">*</span>
+            <span className="text-accent">*</span>
           ) : null;
           const fieldWrapperClass = isFullWidth(field.type)
             ? "space-y-2 md:col-span-2"
@@ -145,7 +145,7 @@ export default function RegistrationForm({
               <div key={fieldId} className={fieldWrapperClass}>
                 <label
                   htmlFor={fieldId}
-                  className="block text-sm font-medium text-[color:var(--color-muted)]"
+                  className="block text-sm font-medium text-muted"
                 >
                   {field.label} {requiredMark}
                 </label>
@@ -155,10 +155,10 @@ export default function RegistrationForm({
                   rows={4}
                   required={field.required}
                   placeholder={field.placeholder}
-                  className="mt-1 w-full rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-background)] px-4 py-2 text-[color:var(--color-foreground)] focus:border-[color:var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-accent)]"
+                  className="mt-1 w-full rounded-md border border-border bg-background px-4 py-2 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent"
                 />
                 {field.helpText ? (
-                  <p className="text-sm text-[color:var(--color-muted)]">{field.helpText}</p>
+                  <p className="text-sm text-muted">{field.helpText}</p>
                 ) : null}
               </div>
             );
@@ -169,7 +169,7 @@ export default function RegistrationForm({
               <div key={fieldId} className={fieldWrapperClass}>
                 <label
                   htmlFor={fieldId}
-                  className="block text-sm font-medium text-[color:var(--color-muted)]"
+                  className="block text-sm font-medium text-muted"
                 >
                   {field.label} {requiredMark}
                 </label>
@@ -177,7 +177,7 @@ export default function RegistrationForm({
                   id={fieldId}
                   name={fieldId}
                   required={field.required}
-                  className="mt-1 w-full rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-background)] px-4 py-2 text-[color:var(--color-foreground)] focus:border-[color:var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-accent)]"
+                  className="mt-1 w-full rounded-md border border-border bg-background px-4 py-2 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent"
                 >
                   <option value="">Select an option</option>
                   {(field.options ?? []).map((option) => (
@@ -187,7 +187,7 @@ export default function RegistrationForm({
                   ))}
                 </select>
                 {field.helpText ? (
-                  <p className="text-sm text-[color:var(--color-muted)]">{field.helpText}</p>
+                  <p className="text-sm text-muted">{field.helpText}</p>
                 ) : null}
               </div>
             );
@@ -196,7 +196,7 @@ export default function RegistrationForm({
           if (field.type === "radio") {
             return (
               <fieldset key={fieldId} className={fieldWrapperClass}>
-                <legend className="block text-sm font-medium text-[color:var(--color-muted)]">
+                <legend className="block text-sm font-medium text-muted">
                   {field.label} {requiredMark}
                 </legend>
                 <div className="mt-3 space-y-2">
@@ -210,15 +210,15 @@ export default function RegistrationForm({
                           name={fieldId}
                           value={option}
                           required={field.required && index === 0}
-                          className="h-4 w-4 border-[color:var(--color-border)] text-[color:var(--color-accent)] focus:ring-[color:var(--color-accent)]"
+                          className="h-4 w-4 border-border text-accent focus:ring-accent"
                         />
-                        <span className="text-[color:var(--color-foreground)]">{option}</span>
+                        <span className="text-foreground">{option}</span>
                       </label>
                     );
                   })}
                 </div>
                 {field.helpText ? (
-                  <p className="mt-2 text-sm text-[color:var(--color-muted)]">{field.helpText}</p>
+                  <p className="mt-2 text-sm text-muted">{field.helpText}</p>
                 ) : null}
               </fieldset>
             );
@@ -234,14 +234,14 @@ export default function RegistrationForm({
                     name={fieldId}
                     value="yes"
                     required={field.required}
-                    className="self-center h-4 w-4 rounded border-[color:var(--color-border)] text-[color:var(--color-accent)] focus:ring-[color:var(--color-accent)]"
+                    className="self-center h-4 w-4 rounded border-border text-accent focus:ring-accent"
                   />
-                  <span className="text-sm font-medium text-[color:var(--color-muted)]">
+                  <span className="text-sm font-medium text-muted">
                     {field.label} {requiredMark}
                   </span>
                 </label>
                 {field.helpText ? (
-                  <p className="text-sm text-[color:var(--color-muted)]">{field.helpText}</p>
+                  <p className="text-sm text-muted">{field.helpText}</p>
                 ) : null}
               </div>
             );
@@ -251,7 +251,7 @@ export default function RegistrationForm({
             <div key={fieldId} className={fieldWrapperClass}>
               <label
                 htmlFor={fieldId}
-                className="block text-sm font-medium text-[color:var(--color-muted)]"
+                className="block text-sm font-medium text-muted"
               >
                 {field.label} {requiredMark}
               </label>
@@ -261,10 +261,10 @@ export default function RegistrationForm({
                 name={fieldId}
                 required={field.required}
                 placeholder={field.placeholder}
-                className="mt-1 w-full rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-background)] px-4 py-2 text-[color:var(--color-foreground)] focus:border-[color:var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-accent)]"
+                className="mt-1 w-full rounded-md border border-border bg-background px-4 py-2 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent"
               />
               {field.helpText ? (
-                <p className="text-sm text-[color:var(--color-muted)]">{field.helpText}</p>
+                <p className="text-sm text-muted">{field.helpText}</p>
               ) : null}
             </div>
           );
@@ -276,22 +276,22 @@ export default function RegistrationForm({
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full rounded-md bg-[color:var(--color-accent)] px-6 py-3 text-lg font-semibold text-white transition-colors hover:bg-[color:var(--color-accent-secondary)] disabled:bg-[color:var(--color-border)] disabled:text-[color:var(--color-muted)] disabled:cursor-not-allowed"
+          className="w-full rounded-md bg-accent px-6 py-3 text-lg font-semibold text-white transition-colors hover:bg-accent-secondary disabled:bg-border disabled:text-muted disabled:cursor-not-allowed"
         >
           {isSubmitting ? "Submitting..." : "Submit Registration"}
         </button>
         {submitStatus === "success" ? (
-          <div className="rounded-md border border-[color:var(--color-accent-secondary)] bg-[color:var(--color-accent-secondary)/0.1] px-4 py-3 text-[color:var(--color-foreground)]">
+          <div className="rounded-md border border-accent-secondary bg-accent-secondary/10 px-4 py-3 text-foreground">
             <p className="text-base font-semibold">
               {thankYou?.title ?? "Thank you for registering."}
             </p>
-            <p className="mt-1 text-sm text-[color:var(--color-muted)]">
+            <p className="mt-1 text-sm text-muted">
               {thankYou?.message ?? "We'll reach out within 24 hours to confirm next steps."}
             </p>
           </div>
         ) : null}
         {submitStatus === "error" ? (
-          <p className="text-sm text-[color:var(--color-muted)]">
+          <p className="text-sm text-muted">
             We couldn't submit your registration. Please try again or contact us directly.
           </p>
         ) : null}

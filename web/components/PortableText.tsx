@@ -19,29 +19,29 @@ type LinkMark = {
 const components: PortableTextComponents = {
   block: {
     normal: ({ children }: PortableTextComponentProps<PortableTextBlock>) => (
-      <p className="mb-6 text-lg text-[color:var(--color-muted)]">
+      <p className="mb-6 text-lg text-muted">
         {children}
       </p>
     ),
     h2: ({ children }: PortableTextComponentProps<PortableTextBlock>) => (
-      <h2 className="mb-4 mt-8 text-2xl font-bold text-[color:var(--color-foreground)]">
+      <h2 className="mb-4 mt-8 text-2xl font-bold text-foreground">
         {children}
       </h2>
     ),
     h3: ({ children }: PortableTextComponentProps<PortableTextBlock>) => (
-      <h3 className="mb-3 mt-6 text-xl font-bold text-[color:var(--color-foreground)]">
+      <h3 className="mb-3 mt-6 text-xl font-bold text-foreground">
         {children}
       </h3>
     ),
   },
   list: {
     bullet: ({ children }: PortableTextComponentProps<PortableTextBlock>) => (
-      <ul className="mb-6 ml-6 list-disc space-y-2 text-lg text-[color:var(--color-muted)]">
+      <ul className="mb-6 ml-6 list-disc space-y-2 text-lg text-muted">
         {children}
       </ul>
     ),
     number: ({ children }: PortableTextComponentProps<PortableTextBlock>) => (
-      <ol className="mb-6 ml-6 list-decimal space-y-2 text-lg text-[color:var(--color-muted)]">
+      <ol className="mb-6 ml-6 list-decimal space-y-2 text-lg text-muted">
         {children}
       </ol>
     ),
@@ -71,21 +71,21 @@ const components: PortableTextComponents = {
             href={href}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[color:var(--color-accent)] underline transition-colors hover:text-[color:var(--color-accent-secondary)]"
+            className="text-accent underline transition-colors hover:text-accent-secondary"
           >
             {children}
           </a>
         );
       }
 
-      return (
-        <Link
-          href={href}
-          className="text-[color:var(--color-accent)] underline transition-colors hover:text-[color:var(--color-accent-secondary)]"
-        >
-          {children}
-        </Link>
-      );
+        return (
+          <Link
+            href={href}
+            className="text-accent underline transition-colors hover:text-accent-secondary"
+          >
+            {children}
+          </Link>
+        );
     },
   },
 };

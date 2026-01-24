@@ -41,12 +41,12 @@ export default async function Home() {
   // Error handling: Show message if content not available
   if (!homePage) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-white dark:bg-black">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+          <h1 className="text-2xl font-bold text-foreground">
             Content not available
           </h1>
-          <p className="mt-2 text-slate-600 dark:text-slate-400">
+          <p className="mt-2 text-muted">
             Please check back later or contact support.
           </p>
         </div>
@@ -55,17 +55,17 @@ export default async function Home() {
   }
 
   return (
-    <div className="bg-white dark:bg-black">
+    <div className="bg-background">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 to-emerald-50 dark:from-slate-900 dark:to-zinc-900">
+      <section className="relative overflow-hidden bg-gradient-to-br from-background to-surface">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
           <div className="grid gap-12 lg:grid-cols-2 lg:gap-8">
             {/* Text Content */}
             <div className="flex flex-col justify-center text-center lg:text-left">
-              <h1 className="text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-5xl lg:text-6xl">
+              <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
                 {homePage.hero.title}
               </h1>
-              <p className="mx-auto mt-6 max-w-2xl text-lg sm:text-xl text-slate-700 dark:text-slate-300 lg:mx-0">
+              <p className="mx-auto mt-6 max-w-2xl text-lg text-muted sm:text-xl lg:mx-0">
                 {homePage.hero.subtitle}
               </p>
             </div>
@@ -85,14 +85,14 @@ export default async function Home() {
             <div className="mt-2 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6 lg:mt-10 lg:items-start lg:justify-start">
               <Link
                 href={homePage.hero.primaryButton.url}
-                className="w-full sm:w-auto rounded-full bg-[color:var(--color-accent)] px-8 py-3 text-center text-lg font-semibold text-white transition-colors hover:bg-[color:var(--color-accent-secondary)]"
+                className="w-full sm:w-auto rounded-full bg-accent px-8 py-3 text-center text-lg font-semibold text-white transition-colors hover:bg-accent-secondary"
               >
                 {homePage.hero.primaryButton.text}
               </Link>
               {homePage.hero.secondaryButton && (
                 <Link
                   href={homePage.hero.secondaryButton.url}
-                  className="w-full sm:w-auto rounded-full border-2 border-[color:var(--color-accent)] px-8 py-3 text-center text-lg font-semibold text-[color:var(--color-accent)] transition-colors hover:bg-[color:var(--color-surface)]"
+                  className="w-full sm:w-auto rounded-full border-2 border-accent px-8 py-3 text-center text-lg font-semibold text-accent transition-colors hover:bg-surface"
                 >
                   {homePage.hero.secondaryButton.text}
                 </Link>
@@ -103,9 +103,9 @@ export default async function Home() {
       </section>
 
       {/* Mission Statement Section */}
-      <section className="bg-white dark:bg-black">
+      <section className="bg-background">
         <div className="mx-auto max-w-4xl px-4 py-20 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-slate-100">
+          <h2 className="text-3xl font-bold text-foreground">
             {homePage.mission.title}
           </h2>
           <div className="mt-8">
@@ -115,17 +115,17 @@ export default async function Home() {
       </section>
 
       {/* Call to Action Section */}
-      <section className="bg-[color:var(--color-primary)]">
+      <section className="bg-primary">
         <div className="mx-auto max-w-4xl px-4 py-16 text-center sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-white">
+          <h2 className="text-3xl font-bold text-background">
             {homePage.ctaSection.title}
           </h2>
-          <p className="mt-4 text-xl text-white/80">
+          <p className="mt-4 text-xl text-background/80">
             {homePage.ctaSection.subtitle}
           </p>
           <Link
             href={homePage.ctaSection.button.url}
-            className="mt-8 inline-block rounded-full bg-white px-8 py-3 text-lg font-semibold text-[color:var(--color-primary)] transition-colors hover:bg-[color:var(--color-surface)]"
+            className="mt-8 inline-block rounded-full bg-background px-8 py-3 text-lg font-semibold text-primary transition-colors hover:bg-surface"
           >
             {homePage.ctaSection.button.text}
           </Link>

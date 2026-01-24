@@ -37,12 +37,12 @@ export default async function About() {
 
   if (!aboutPage) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[color:var(--color-background)]">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-[color:var(--color-foreground)]">
+          <h1 className="text-2xl font-bold text-foreground">
             Content not available
           </h1>
-          <p className="mt-2 text-[color:var(--color-muted)]">
+          <p className="mt-2 text-muted">
             Please check back later or contact support.
           </p>
         </div>
@@ -51,11 +51,9 @@ export default async function About() {
   }
 
   return (
-    <div className="bg-[color:var(--color-background)]">
+    <div className="bg-background">
       <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-[color:var(--color-foreground)]">
-          {aboutPage.title}
-        </h1>
+        <h1 className="text-4xl font-bold text-foreground">{aboutPage.title}</h1>
 
         <div className="mt-8">
           <PortableText value={aboutPage.content} />
