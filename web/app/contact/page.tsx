@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { draftMode } from "next/headers";
+import ContactForm from "@/components/ContactForm";
 import { getContactPage, getSiteSettings } from "@/lib/sanity/queries";
 
 export const revalidate = 3600;
@@ -108,64 +109,7 @@ export default async function Contact() {
             </div>
           </div>
 
-          <div className="rounded-lg bg-[color:var(--color-surface)] p-8">
-            <h2 className="text-2xl font-semibold text-[color:var(--color-foreground)]">
-              {contactPage.formTitle}
-            </h2>
-            <form className="mt-6 space-y-4">
-              <div>
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium text-[color:var(--color-muted)]"
-                >
-                  Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  className="mt-1 w-full rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-background)] px-4 py-2 text-[color:var(--color-foreground)]"
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-[color:var(--color-muted)]"
-                >
-                  Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  className="mt-1 w-full rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-background)] px-4 py-2 text-[color:var(--color-foreground)]"
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="message"
-                  className="block text-sm font-medium text-[color:var(--color-muted)]"
-                >
-                  Message
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  rows={4}
-                  className="mt-1 w-full rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-background)] px-4 py-2 text-[color:var(--color-foreground)]"
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="w-full rounded-md bg-[color:var(--color-accent)] px-4 py-2 font-semibold text-white transition-colors hover:bg-[color:var(--color-accent-secondary)]"
-              >
-                Send Message
-              </button>
-            </form>
-          </div>
+          <ContactForm formTitle={contactPage.formTitle} />
         </div>
       </div>
     </div>
