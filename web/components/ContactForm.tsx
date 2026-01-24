@@ -185,7 +185,7 @@ export default function ContactForm({ formTitle }: ContactFormProps) {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full rounded-md bg-[color:var(--color-accent)] px-6 py-3 text-lg font-semibold text-white transition-colors hover:bg-[color:var(--color-accent-secondary)] disabled:cursor-not-allowed disabled:bg-[color:var(--color-border)] disabled:text-[color:var(--color-muted)]"
+            className="w-full rounded-md bg-[color:var(--color-accent)] px-6 py-3 text-lg font-semibold text-white transition-colors hover:bg-[color:var(--color-accent-secondary)] disabled:bg-[color:var(--color-border)] disabled:text-[color:var(--color-muted)] disabled:cursor-not-allowed"
           >
             {isSubmitting ? "Sending..." : "Send Message"}
           </button>
