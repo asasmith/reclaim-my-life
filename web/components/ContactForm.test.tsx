@@ -39,7 +39,21 @@ describe("ContactForm", () => {
     await fillRequiredFields(user);
     await user.click(screen.getByRole("button", { name: "Send Message" }));
 
-    expect(await screen.findByText("Please provide an email or phone number.")).toBeInTheDocument();
+    const errorMessage = await screen.findByText("Please provide an email or phone number.");
+    expect(errorMessage).toBeInTheDocument();
+    expect(errorMessage).toHaveAttribute("id", "contact-info-error");
+
+    expect(screen.getByLabelText(/Email/)).toHaveAttribute("aria-invalid", "true");
+    expect(screen.getByLabelText(/Email/)).toHaveAttribute(
+      "aria-describedby",
+      "contact-info-error"
+    );
+    expect(screen.getByLabelText(/Phone/)).toHaveAttribute("aria-invalid", "true");
+    expect(screen.getByLabelText(/Phone/)).toHaveAttribute(
+      "aria-describedby",
+      "contact-info-error"
+    );
+
     expect(fetchSpy).not.toHaveBeenCalled();
   });
 
@@ -53,10 +67,15 @@ describe("ContactForm", () => {
 
     expect(await screen.findByText("Please provide an email or phone number.")).toBeInTheDocument();
 
+    expect(screen.getByLabelText(/Email/)).toHaveAttribute("aria-invalid", "true");
+    expect(screen.getByLabelText(/Phone/)).toHaveAttribute("aria-invalid", "true");
+
     await user.type(screen.getByLabelText(/Phone/), "555-123-4567");
 
     await waitFor(() => {
       expect(screen.queryByText("Please provide an email or phone number.")).toBeNull();
+      expect(screen.getByLabelText(/Email/)).not.toHaveAttribute("aria-invalid");
+      expect(screen.getByLabelText(/Phone/)).not.toHaveAttribute("aria-invalid");
     });
   });
 

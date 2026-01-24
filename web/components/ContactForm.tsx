@@ -79,6 +79,11 @@ export default function ContactForm({ formTitle }: ContactFormProps) {
     }
   };
 
+  const contactInfoErrorId = "contact-info-error";
+  const contactInfoInvalidAttributes = contactInfoError
+    ? { "aria-invalid": true, "aria-describedby": contactInfoErrorId }
+    : undefined;
+
   return (
     <div className="rounded-lg bg-[color:var(--color-surface)] p-8">
       <h2 className="text-2xl font-semibold text-[color:var(--color-foreground)]">
@@ -138,7 +143,9 @@ export default function ContactForm({ formTitle }: ContactFormProps) {
             type="email"
             id="email"
             name="email"
+            autoComplete="email"
             onChange={handleContactFieldChange}
+            {...contactInfoInvalidAttributes}
             className="mt-1 w-full rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-background)] px-4 py-2 text-[color:var(--color-foreground)] focus:border-[color:var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-accent)]"
           />
         </div>
@@ -156,10 +163,15 @@ export default function ContactForm({ formTitle }: ContactFormProps) {
             name="phone"
             autoComplete="tel"
             onChange={handleContactFieldChange}
+            {...contactInfoInvalidAttributes}
             className="mt-1 w-full rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-background)] px-4 py-2 text-[color:var(--color-foreground)] focus:border-[color:var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-accent)]"
           />
           {contactInfoError ? (
-            <p role="alert" className="mt-2 text-sm text-[color:var(--color-muted)]">
+            <p
+              id={contactInfoErrorId}
+              role="alert"
+              className="mt-2 text-sm text-[color:var(--color-muted)]"
+            >
               {contactInfoError}
             </p>
           ) : null}
