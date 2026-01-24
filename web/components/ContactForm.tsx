@@ -4,6 +4,8 @@ import { useRef, useState } from "react";
 
 type SubmitStatus = "idle" | "success" | "error";
 
+type ContactInfoError = string | null;
+
 type ContactFormProps = Readonly<{
   formTitle: string;
 }>;
@@ -12,11 +14,13 @@ export default function ContactForm({ formTitle }: ContactFormProps) {
   const formRef = useRef<HTMLFormElement | null>(null);
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>("idle");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [contactInfoError, setContactInfoError] = useState<ContactInfoError>(null);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus("idle");
+    setContactInfoError(null);
 
     if (!formRef.current) {
       setIsSubmitting(false);
@@ -25,6 +29,16 @@ export default function ContactForm({ formTitle }: ContactFormProps) {
     }
 
     const formData = new FormData(formRef.current);
+
+    const email = String(formData.get("email") ?? "").trim();
+    const phone = String(formData.get("phone") ?? "").trim();
+
+    if (!email && !phone) {
+      setIsSubmitting(false);
+      setContactInfoError("Please provide an email or phone number.");
+      return;
+    }
+
     const params = new URLSearchParams();
 
     formData.forEach((value, key) => {
@@ -49,6 +63,19 @@ export default function ContactForm({ formTitle }: ContactFormProps) {
       setSubmitStatus("error");
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleContactFieldChange = () => {
+    if (!formRef.current) {
+      return;
+    }
+
+    const email = formRef.current.querySelector<HTMLInputElement>("#email")?.value?.trim();
+    const phone = formRef.current.querySelector<HTMLInputElement>("#phone")?.value?.trim();
+
+    if (email || phone) {
+      setContactInfoError(null);
     }
   };
 
@@ -94,7 +121,8 @@ export default function ContactForm({ formTitle }: ContactFormProps) {
             type="text"
             id="name"
             name="name"
-            className="mt-1 w-full rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-background)] px-4 py-2 text-[color:var(--color-foreground)]"
+            required
+            className="mt-1 w-full rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-background)] px-4 py-2 text-[color:var(--color-foreground)] focus:border-[color:var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-accent)]"
           />
         </div>
 
@@ -109,8 +137,31 @@ export default function ContactForm({ formTitle }: ContactFormProps) {
             type="email"
             id="email"
             name="email"
-            className="mt-1 w-full rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-background)] px-4 py-2 text-[color:var(--color-foreground)]"
+            onChange={handleContactFieldChange}
+            className="mt-1 w-full rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-background)] px-4 py-2 text-[color:var(--color-foreground)] focus:border-[color:var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-accent)]"
           />
+        </div>
+
+        <div>
+          <label
+            htmlFor="phone"
+            className="block text-sm font-medium text-[color:var(--color-muted)]"
+          >
+            Phone
+          </label>
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            autoComplete="tel"
+            onChange={handleContactFieldChange}
+            className="mt-1 w-full rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-background)] px-4 py-2 text-[color:var(--color-foreground)] focus:border-[color:var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-accent)]"
+          />
+          {contactInfoError ? (
+            <p role="alert" className="mt-2 text-sm text-[color:var(--color-muted)]">
+              {contactInfoError}
+            </p>
+          ) : null}
         </div>
 
         <div>
@@ -124,7 +175,8 @@ export default function ContactForm({ formTitle }: ContactFormProps) {
             id="message"
             name="message"
             rows={4}
-            className="mt-1 w-full rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-background)] px-4 py-2 text-[color:var(--color-foreground)]"
+            required
+            className="mt-1 w-full rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-background)] px-4 py-2 text-[color:var(--color-foreground)] focus:border-[color:var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-accent)]"
           />
         </div>
 
@@ -133,7 +185,7 @@ export default function ContactForm({ formTitle }: ContactFormProps) {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full rounded-md bg-[color:var(--color-accent)] px-4 py-2 font-semibold text-white transition-colors hover:bg-[color:var(--color-accent-secondary)] disabled:bg-[color:var(--color-border)] disabled:text-[color:var(--color-muted)] disabled:cursor-not-allowed"
+            className="w-full rounded-md bg-[color:var(--color-accent)] px-6 py-3 text-lg font-semibold text-white transition-colors hover:bg-[color:var(--color-accent-secondary)] disabled:cursor-not-allowed disabled:bg-[color:var(--color-border)] disabled:text-[color:var(--color-muted)]"
           >
             {isSubmitting ? "Sending..." : "Send Message"}
           </button>

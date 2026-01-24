@@ -5,8 +5,12 @@ import { render, screen, waitFor } from "@/tests/helpers/test-utils";
 
 const fillRequiredFields = async (user: ReturnType<typeof userEvent.setup>) => {
   await user.type(screen.getByLabelText(/Name/), "Jane Doe");
-  await user.type(screen.getByLabelText(/Email/), "jane.doe@example.com");
   await user.type(screen.getByLabelText(/Message/), "Hello there.");
+};
+
+const fillRequiredFieldsWithEmail = async (user: ReturnType<typeof userEvent.setup>) => {
+  await fillRequiredFields(user);
+  await user.type(screen.getByLabelText(/Email/), "jane.doe@example.com");
 };
 
 afterEach(() => {
@@ -20,7 +24,23 @@ describe("ContactForm", () => {
     expect(screen.getByText("Reach Out")).toBeInTheDocument();
     expect(screen.getByLabelText(/Name/)).toBeInTheDocument();
     expect(screen.getByLabelText(/Email/)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Phone/)).toBeInTheDocument();
     expect(screen.getByLabelText(/Message/)).toBeInTheDocument();
+  });
+
+  it("requires either email or phone", async () => {
+    const user = userEvent.setup();
+    const fetchSpy = vi.fn().mockResolvedValue({ ok: true });
+
+    vi.stubGlobal("fetch", fetchSpy);
+
+    render(<ContactForm formTitle="Reach Out" />);
+
+    await fillRequiredFields(user);
+    await user.click(screen.getByRole("button", { name: "Send Message" }));
+
+    expect(await screen.findByText("Please provide an email or phone number.")).toBeInTheDocument();
+    expect(fetchSpy).not.toHaveBeenCalled();
   });
 
   it("submits the form and shows success message", async () => {
@@ -31,7 +51,7 @@ describe("ContactForm", () => {
 
     const { container } = render(<ContactForm formTitle="Reach Out" />);
 
-    await fillRequiredFields(user);
+    await fillRequiredFieldsWithEmail(user);
     await user.click(screen.getByRole("button", { name: "Send Message" }));
 
     await waitFor(() => {
@@ -41,6 +61,7 @@ describe("ContactForm", () => {
 
     expect(screen.getByLabelText(/Name/)).toHaveValue("");
     expect(screen.getByLabelText(/Email/)).toHaveValue("");
+    expect(screen.getByLabelText(/Phone/)).toHaveValue("");
     expect(screen.getByLabelText(/Message/)).toHaveValue("");
     expect(container.querySelector("div[data-netlify-recaptcha=\"true\"]")).toBeNull();
 
@@ -49,6 +70,7 @@ describe("ContactForm", () => {
     expect(requestBody).toContain("form-name=contact");
     expect(requestBody).toContain("name=Jane+Doe");
     expect(requestBody).toContain("email=jane.doe%40example.com");
+    expect(requestBody).toContain("phone=");
     expect(requestBody).toContain("message=Hello+there.");
   });
 
@@ -61,7 +83,7 @@ describe("ContactForm", () => {
 
     render(<ContactForm formTitle="Reach Out" />);
 
-    await fillRequiredFields(user);
+    await fillRequiredFieldsWithEmail(user);
     await user.click(screen.getByRole("button", { name: "Send Message" }));
 
     expect(
