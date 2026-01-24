@@ -23,7 +23,7 @@ export default function Navigation() {
     };
 
     return (
-        <header className="bg-[color:var(--color-background)] shadow-sm">
+        <header className="bg-background shadow-sm">
             <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="flex h-20 items-center justify-between">
                     <div className="flex items-center">
@@ -45,9 +45,9 @@ export default function Navigation() {
                             <Link
                                 key={link.href}
                                 href={link.href}
-                                className={`text-sm font-medium transition-colors hover:text-[color:var(--color-accent)] ${pathname === link.href
-                                    ? "text-[color:var(--color-primary)]"
-                                    : "text-[color:var(--color-muted)]"
+                                className={`text-sm font-medium transition-colors hover:text-accent ${pathname === link.href
+                                    ? "text-primary"
+                                    : "text-muted"
                                     }`}
                             >
                                 {link.label}
@@ -55,7 +55,7 @@ export default function Navigation() {
                         ))}
                         <Link
                             href="/register"
-                            className="rounded-full bg-[color:var(--color-accent)] px-6 py-2 text-sm font-semibold text-white transition-colors hover:bg-[color:var(--color-accent-secondary)]"
+                            className="rounded-full bg-accent px-6 py-2 text-sm font-semibold text-white transition-colors hover:bg-accent-secondary"
                         >
                             Register
                         </Link>
@@ -66,7 +66,7 @@ export default function Navigation() {
                         <button
                             type="button"
                             onClick={toggleMobileMenu}
-                            className="rounded-md p-2 text-[color:var(--color-muted)] hover:bg-[color:var(--color-surface)]"
+                            className="rounded-md p-2 text-muted hover:bg-surface"
                             aria-label="Toggle menu"
                         >
                             {isMobileMenuOpen ? (
@@ -104,7 +104,7 @@ export default function Navigation() {
 
                 {/* Mobile Menu */}
                 {isMobileMenuOpen && (
-                    <div className="border-t border-[color:var(--color-border)] py-4 md:hidden">
+                    <div className="border-t border-border py-4 md:hidden">
                         <div className="space-y-2">
                             {navLinks.map((link) => (
                                 <Link
@@ -112,8 +112,8 @@ export default function Navigation() {
                                     href={link.href}
                                     onClick={closeMobileMenu}
                                     className={`block rounded-md px-4 py-2 text-base font-medium transition-colors ${pathname === link.href
-                                        ? "bg-[color:var(--color-surface)] text-[color:var(--color-primary)]"
-                                        : "text-[color:var(--color-muted)] hover:bg-[color:var(--color-surface)]"
+                                        ? "bg-surface text-primary"
+                                        : "text-muted hover:bg-surface"
                                         }`}
                                 >
                                     {link.label}
@@ -122,7 +122,7 @@ export default function Navigation() {
 
                             <Link
                                 href="/register"
-                                className="rounded-full bg-[color:var(--color-accent)] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[color:var(--color-accent-secondary)]"
+                                className="rounded-full bg-accent px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-accent-secondary"
                             >
                                 Register
                             </Link>

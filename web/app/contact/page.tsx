@@ -39,12 +39,12 @@ export default async function Contact() {
 
   if (!contactPage) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[color:var(--color-background)]">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-[color:var(--color-foreground)]">
+          <h1 className="text-2xl font-bold text-foreground">
             Content not available
           </h1>
-          <p className="mt-2 text-[color:var(--color-muted)]">
+          <p className="mt-2 text-muted">
             Please check back later or contact support.
           </p>
         </div>
@@ -55,46 +55,46 @@ export default async function Contact() {
   const contactInfo = siteSettings?.contactInfo;
 
   return (
-    <div className="bg-[color:var(--color-background)]">
+    <div className="bg-background">
       <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-[color:var(--color-foreground)]">
+        <h1 className="text-4xl font-bold text-foreground">
           {contactPage.title}
         </h1>
 
         <div className="mt-8 grid gap-8 md:grid-cols-2">
           <div>
-            <h2 className="text-2xl font-semibold text-[color:var(--color-foreground)]">
+            <h2 className="text-2xl font-semibold text-foreground">
               Get in Touch
             </h2>
-            <p className="mt-4 text-lg text-[color:var(--color-muted)]">
+            <p className="mt-4 text-lg text-muted">
               {contactPage.introText}
             </p>
 
             <div className="mt-8 space-y-4">
               {contactInfo?.phone && (
                 <div>
-                  <h3 className="font-semibold text-[color:var(--color-foreground)]">
+                  <h3 className="font-semibold text-foreground">
                     Phone
                   </h3>
-                  <p className="text-[color:var(--color-muted)]">{contactInfo.phone}</p>
+                  <p className="text-muted">{contactInfo.phone}</p>
                 </div>
               )}
 
               {contactInfo?.email && (
                 <div>
-                  <h3 className="font-semibold text-[color:var(--color-foreground)]">
+                  <h3 className="font-semibold text-foreground">
                     Email
                   </h3>
-                  <p className="text-[color:var(--color-muted)]">{contactInfo.email}</p>
+                  <p className="text-muted">{contactInfo.email}</p>
                 </div>
               )}
 
               {contactInfo?.address && (
                 <div>
-                  <h3 className="font-semibold text-[color:var(--color-foreground)]">
+                  <h3 className="font-semibold text-foreground">
                     Address
                   </h3>
-                  <p className="text-[color:var(--color-muted)]">
+                  <p className="text-muted">
                     {contactInfo.address.street}
                     <br />
                     {contactInfo.address.city}, {contactInfo.address.state} {contactInfo.address.zip}
@@ -103,8 +103,8 @@ export default async function Contact() {
               )}
 
               <div>
-                <h3 className="font-semibold text-[color:var(--color-foreground)]">Hours</h3>
-                <p className="text-[color:var(--color-muted)]">24/7 Support Available</p>
+                <h3 className="font-semibold text-foreground">Hours</h3>
+                <p className="text-muted">24/7 Support Available</p>
               </div>
             </div>
           </div>

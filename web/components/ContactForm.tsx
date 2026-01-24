@@ -85,8 +85,8 @@ export default function ContactForm({ formTitle }: ContactFormProps) {
     : undefined;
 
   return (
-    <div className="rounded-lg bg-[color:var(--color-surface)] p-8">
-      <h2 className="text-2xl font-semibold text-[color:var(--color-foreground)]">
+    <div className="rounded-lg bg-surface p-8">
+      <h2 className="text-2xl font-semibold text-foreground">
         {formTitle}
       </h2>
       <form
@@ -118,7 +118,7 @@ export default function ContactForm({ formTitle }: ContactFormProps) {
         <div>
           <label
             htmlFor="name"
-            className="block text-sm font-medium text-[color:var(--color-muted)]"
+            className="block text-sm font-medium text-muted"
           >
             Name
           </label>
@@ -128,14 +128,14 @@ export default function ContactForm({ formTitle }: ContactFormProps) {
             name="name"
             autoComplete="name"
             required
-            className="mt-1 w-full rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-background)] px-4 py-2 text-[color:var(--color-foreground)] focus:border-[color:var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-accent)]"
+            className="mt-1 w-full rounded-md border border-border bg-background px-4 py-2 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent"
           />
         </div>
 
         <div>
           <label
             htmlFor="email"
-            className="block text-sm font-medium text-[color:var(--color-muted)]"
+            className="block text-sm font-medium text-muted"
           >
             Email
           </label>
@@ -146,14 +146,14 @@ export default function ContactForm({ formTitle }: ContactFormProps) {
             autoComplete="email"
             onChange={handleContactFieldChange}
             {...contactInfoInvalidAttributes}
-            className="mt-1 w-full rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-background)] px-4 py-2 text-[color:var(--color-foreground)] focus:border-[color:var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-accent)]"
+            className="mt-1 w-full rounded-md border border-border bg-background px-4 py-2 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent"
           />
         </div>
 
         <div>
           <label
             htmlFor="phone"
-            className="block text-sm font-medium text-[color:var(--color-muted)]"
+            className="block text-sm font-medium text-muted"
           >
             Phone
           </label>
@@ -164,13 +164,13 @@ export default function ContactForm({ formTitle }: ContactFormProps) {
             autoComplete="tel"
             onChange={handleContactFieldChange}
             {...contactInfoInvalidAttributes}
-            className="mt-1 w-full rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-background)] px-4 py-2 text-[color:var(--color-foreground)] focus:border-[color:var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-accent)]"
+            className="mt-1 w-full rounded-md border border-border bg-background px-4 py-2 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent"
           />
           {contactInfoError ? (
             <p
               id={contactInfoErrorId}
               role="alert"
-              className="mt-2 text-sm text-[color:var(--color-muted)]"
+              className="mt-2 text-sm text-muted"
             >
               {contactInfoError}
             </p>
@@ -180,7 +180,7 @@ export default function ContactForm({ formTitle }: ContactFormProps) {
         <div>
           <label
             htmlFor="message"
-            className="block text-sm font-medium text-[color:var(--color-muted)]"
+            className="block text-sm font-medium text-muted"
           >
             Message
           </label>
@@ -189,7 +189,7 @@ export default function ContactForm({ formTitle }: ContactFormProps) {
             name="message"
             rows={4}
             required
-            className="mt-1 w-full rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-background)] px-4 py-2 text-[color:var(--color-foreground)] focus:border-[color:var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[color:var(--color-accent)]"
+            className="mt-1 w-full rounded-md border border-border bg-background px-4 py-2 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent"
           />
         </div>
 
@@ -198,20 +198,20 @@ export default function ContactForm({ formTitle }: ContactFormProps) {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full rounded-md bg-[color:var(--color-accent)] px-6 py-3 text-lg font-semibold text-white transition-colors hover:bg-[color:var(--color-accent-secondary)] disabled:bg-[color:var(--color-border)] disabled:text-[color:var(--color-muted)] disabled:cursor-not-allowed"
+            className="w-full rounded-md bg-accent px-6 py-3 text-lg font-semibold text-white transition-colors hover:bg-accent-secondary disabled:bg-border disabled:text-muted disabled:cursor-not-allowed"
           >
             {isSubmitting ? "Sending..." : "Send Message"}
           </button>
           {submitStatus === "success" ? (
-            <div className="rounded-md border border-[color:var(--color-accent-secondary)] bg-[color:var(--color-accent-secondary)/0.1] px-4 py-3 text-[color:var(--color-foreground)]">
+            <div className="rounded-md border border-accent-secondary bg-accent-secondary/10 px-4 py-3 text-foreground">
               <p className="text-base font-semibold">Thanks for reaching out.</p>
-              <p className="mt-1 text-sm text-[color:var(--color-muted)]">
+              <p className="mt-1 text-sm text-muted">
                 We will respond within one business day.
               </p>
             </div>
           ) : null}
           {submitStatus === "error" ? (
-            <p className="text-sm text-[color:var(--color-muted)]">
+            <p className="text-sm text-muted">
               We could not send your message. Please try again or contact us directly.
             </p>
           ) : null}

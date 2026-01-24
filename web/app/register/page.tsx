@@ -37,12 +37,12 @@ export default async function Register() {
 
   if (!registerPage) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[color:var(--color-background)]">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-[color:var(--color-foreground)]">
+          <h1 className="text-2xl font-bold text-foreground">
             Content not available
           </h1>
-          <p className="mt-2 text-[color:var(--color-muted)]">
+          <p className="mt-2 text-muted">
             Please check back later or contact support.
           </p>
         </div>
@@ -51,13 +51,13 @@ export default async function Register() {
   }
 
   return (
-    <div className="bg-[color:var(--color-background)]">
+    <div className="bg-background">
       <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-[color:var(--color-foreground)]">
+          <h1 className="text-4xl font-bold text-foreground">
             {registerPage.title}
           </h1>
-          <p className="mt-4 text-lg text-[color:var(--color-muted)]">
+          <p className="mt-4 text-lg text-muted">
             {registerPage.subtitle}
           </p>
         </div>
@@ -70,11 +70,11 @@ export default async function Register() {
           />
         </div>
 
-        <div className="mt-12 rounded-lg bg-[color:var(--color-surface)] p-6">
-          <h2 className="text-xl font-semibold text-[color:var(--color-foreground)]">
+        <div className="mt-12 rounded-lg bg-surface p-6">
+          <h2 className="text-xl font-semibold text-foreground">
             {registerPage.nextSteps.title}
           </h2>
-          <ul className="mt-4 space-y-3 text-[color:var(--color-muted)]">
+          <ul className="mt-4 space-y-3 text-muted">
             {registerPage.nextSteps.steps.map((step, index) => (
               <li key={`${step.description}-${index}`} className="flex items-start">
                 <span className="mr-2">{index + 1}.</span>
