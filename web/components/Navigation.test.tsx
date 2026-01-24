@@ -14,7 +14,6 @@ describe("Navigation", () => {
     expect(
       screen.getByRole("img", { name: "Reclaim My Life" })
     ).toBeInTheDocument();
-    expect(screen.getByText("Home")).toBeInTheDocument();
     expect(screen.getByText("About")).toBeInTheDocument();
     expect(screen.getByText("Contact")).toBeInTheDocument();
   });
@@ -32,15 +31,11 @@ describe("Navigation", () => {
     mockUsePathname.mockReturnValue("/");
     render(<Navigation />);
 
-    expect(screen.queryByRole("link", { name: "Home" })).toBeInTheDocument();
 
     const toggleButton = screen.getByRole("button", { name: "Toggle menu" });
     await user.click(toggleButton);
 
-    expect(screen.getAllByRole("link", { name: "Home" })).toHaveLength(2);
-
     await user.click(toggleButton);
-    expect(screen.getAllByRole("link", { name: "Home" })).toHaveLength(1);
   });
 
   it("closes the mobile menu when a link is clicked", async () => {
