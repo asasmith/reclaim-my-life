@@ -3,13 +3,17 @@ import { NextResponse } from "next/server";
 
 const SECRET = process.env.REVALIDATE_SECRET;
 
-const supportedTypes = new Set([
-  "homePage",
-  "aboutPage",
-  "contactPage",
-  "registerPage",
-  "siteSettings",
-]);
+const pathsByType = {
+  homePage: ["/"],
+  aboutPage: ["/about"],
+  contactPage: ["/contact"],
+  registerPage: ["/register"],
+  siteSettings: ["/", "/about", "/contact", "/register"],
+} as const;
+
+type DocumentType = keyof typeof pathsByType;
+
+const supportedTypes = new Set(Object.keys(pathsByType) as DocumentType[]);
 
 export async function POST(request: Request) {
   if (!SECRET) {
@@ -30,19 +34,15 @@ export async function POST(request: Request) {
   }
 
   const documentType = payload?._type;
-  if (!documentType || !supportedTypes.has(documentType)) {
+  if (!documentType || !supportedTypes.has(documentType as DocumentType)) {
     return NextResponse.json({ message: "Unsupported document type" }, { status: 400 });
   }
 
-  const pathsByType: Record<string, string[]> = {
-    homePage: ["/"],
-    aboutPage: ["/about"],
-    contactPage: ["/contact"],
-    registerPage: ["/register"],
-    siteSettings: ["/", "/about", "/contact", "/register"],
-  };
+  if (!(documentType in pathsByType)) {
+    return NextResponse.json({ message: "Unsupported document type" }, { status: 400 });
+  }
 
-  const paths = pathsByType[documentType];
+  const paths = pathsByType[documentType as DocumentType];
 
   paths.forEach((path) => revalidatePath(path));
 
