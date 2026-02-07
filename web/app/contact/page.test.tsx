@@ -89,4 +89,33 @@ describe("Contact page", () => {
     expect(screen.getByText("Austin, TX 78701")).toBeInTheDocument();
     expect(screen.queryByText(/undefined/i)).toBeNull();
   });
+
+  it("renders social links when available", async () => {
+    vi.mocked(getSiteSettings).mockResolvedValue({
+      ...baseSiteSettings,
+      socialLinks: [
+        {
+          platform: "facebook",
+          url: "https://facebook.com/reclaim",
+        },
+        {
+          platform: "instagram",
+          url: "https://instagram.com/reclaim",
+        },
+      ],
+    });
+
+    const page = await ContactPage();
+    render(page);
+
+    expect(screen.getByText("Social")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Facebook" })).toHaveAttribute(
+      "href",
+      "https://facebook.com/reclaim"
+    );
+    expect(screen.getByRole("link", { name: "Instagram" })).toHaveAttribute(
+      "href",
+      "https://instagram.com/reclaim"
+    );
+  });
 });

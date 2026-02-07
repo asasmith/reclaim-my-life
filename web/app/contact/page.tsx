@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { draftMode } from "next/headers";
 import ContactForm from "@/components/ContactForm";
 import { getContactPage, getSiteSettings } from "@/lib/sanity/queries";
+import type { SocialLink } from "@/lib/sanity/types";
 
 export const revalidate = 3600;
 
@@ -69,6 +70,12 @@ export default async function Contact() {
   const cityState = [address?.city, address?.state].filter(Boolean).join(", ");
   const cityStateZip = [cityState, address?.zip].filter(Boolean).join(" ");
   const hasAddress = Boolean(address?.street || cityStateZip);
+  const socialLinks = (siteSettings?.socialLinks ?? []).filter((link) => link.url);
+  const hasSocialLinks = socialLinks.length > 0;
+
+  const formatSocialLabel = (platform: SocialLink["platform"]) => {
+    return platform.charAt(0).toUpperCase() + platform.slice(1);
+  };
 
   return (
     <div className="bg-background">
@@ -119,6 +126,26 @@ export default async function Contact() {
                     )}
                     {cityStateZip}
                   </p>
+                </div>
+              )}
+
+              {hasSocialLinks && (
+                <div>
+                  <h3 className="font-semibold text-foreground">Social</h3>
+                  <ul className="mt-2 space-y-1 text-muted">
+                    {socialLinks.map((link) => (
+                      <li key={link.platform}>
+                        <a
+                          href={link.url}
+                          className="underline underline-offset-4 transition-colors hover:text-foreground"
+                          rel="noreferrer"
+                          target="_blank"
+                        >
+                          {formatSocialLabel(link.platform)}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               )}
 

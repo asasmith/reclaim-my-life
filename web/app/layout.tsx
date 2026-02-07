@@ -47,7 +47,10 @@ export default async function RootLayout({
         <PreviewBanner isPreview={isEnabled} />
         <Navigation />
         <main className="min-h-screen">{children}</main>
-        <Footer contactInfo={siteSettings?.contactInfo} />
+        <Footer
+          contactInfo={siteSettings?.contactInfo}
+          socialLinks={siteSettings?.socialLinks}
+        />
       </body>
     </html>
   );

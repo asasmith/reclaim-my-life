@@ -4,7 +4,21 @@ import { render, screen } from "@/tests/helpers/test-utils";
 
 describe("Footer", () => {
   it("renders key footer content", () => {
-    render(<Footer />);
+    render(
+      <Footer
+        contactInfo={{
+          phone: "(555) 123-4567",
+          email: "info@reclaimmylife.org",
+          address: {
+            street: "123 Main St",
+            city: "Denver",
+            state: "CO",
+            zip: "80202",
+          },
+        }}
+        socialLinks={[{ platform: "facebook", url: "https://facebook.com/reclaim" }]}
+      />
+    );
 
     expect(screen.getByText("Reclaim My Life")).toBeInTheDocument();
     expect(
@@ -36,11 +50,14 @@ describe("Footer", () => {
             zip: "",
           },
         }}
+        socialLinks={[]}
       />
     );
 
     expect(screen.getByText("Phone: (555) 123-4567")).toBeInTheDocument();
     expect(screen.queryByText(/Email:/)).toBeNull();
+    expect(screen.queryByText("Address:")).toBeNull();
+    expect(screen.queryByText("Social:")).toBeNull();
   });
 
   it("omits the contact block when details are missing", () => {
@@ -56,10 +73,36 @@ describe("Footer", () => {
             zip: "",
           },
         }}
+        socialLinks={[]}
       />
     );
 
     expect(screen.queryByText(/Phone:/)).toBeNull();
     expect(screen.queryByText(/Email:/)).toBeNull();
+    expect(screen.queryByText("Contact")).toBeNull();
+  });
+
+  it("renders address and social links when present", () => {
+    render(
+      <Footer
+        contactInfo={{
+          phone: "",
+          email: "",
+          address: {
+            street: "456 Elm St",
+            city: "Austin",
+            state: "TX",
+            zip: "78701",
+          },
+        }}
+        socialLinks={[{ platform: "instagram", url: "https://instagram.com/reclaim" }]}
+      />
+    );
+
+    expect(screen.getByText("Address:")).toBeInTheDocument();
+    expect(screen.getByText(/456 Elm St/)).toBeInTheDocument();
+    expect(screen.getByText(/Austin, TX 78701/)).toBeInTheDocument();
+    expect(screen.getByText("Social:")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Instagram" })).toBeInTheDocument();
   });
 });
