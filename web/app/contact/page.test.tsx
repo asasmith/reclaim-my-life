@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import ContactPage from "@/app/contact/page";
 import { getContactPage, getSiteSettings } from "@/lib/sanity/queries";
+import type { ContactPage as ContactPageType, SiteSettings } from "@/lib/sanity/types";
 import { render, screen } from "@/tests/helpers/test-utils";
 
 vi.mock("@/components/ContactForm", () => ({
@@ -16,7 +17,7 @@ vi.mock("@/lib/sanity/queries", () => ({
   getSiteSettings: vi.fn(),
 }));
 
-const baseContactPage = {
+const baseContactPage: ContactPageType = {
   _id: "contactPage",
   _type: "contactPage",
   title: "Contact Us",
@@ -31,7 +32,7 @@ const emptyAddress = {
   zip: "",
 };
 
-const baseSiteSettings = {
+const baseSiteSettings: SiteSettings = {
   _id: "siteSettings",
   _type: "siteSettings",
   siteName: "Reclaim My Life",

@@ -22,7 +22,7 @@ vi.mock("next/navigation", () => ({
 }));
 
 vi.mock("next/image", () => ({
-  default: (props: Record<string, unknown>) => {
+  default: ({ priority, ...props }: Record<string, unknown>) => {
     return createElement("img", props);
   },
 }));
