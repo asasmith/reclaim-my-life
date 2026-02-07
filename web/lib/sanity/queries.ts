@@ -1,4 +1,5 @@
 import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import { getClient } from "./client";
 import type { AboutPage, ContactPage, HomePage, RegisterPage, SiteSettings } from "./types";
 
@@ -143,7 +144,19 @@ export async function getHomePage(options?: { preview?: boolean }): Promise<Home
 }
 
 const getSiteSettingsCached = cache(async (preview?: boolean): Promise<SiteSettings | null> => {
-  return await getClient({ preview }).fetch(siteSettingsQuery);
+  if (preview) {
+    return await getClient({ preview }).fetch(siteSettingsQuery);
+  }
+
+  const fetchSiteSettings = unstable_cache(
+    async () => {
+      return await getClient({ preview }).fetch(siteSettingsQuery);
+    },
+    ["siteSettings"],
+    { tags: ["siteSettings"] }
+  );
+
+  return await fetchSiteSettings();
 });
 
 export async function getSiteSettings(options?: { preview?: boolean }): Promise<SiteSettings | null> {

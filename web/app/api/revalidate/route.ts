@@ -1,4 +1,4 @@
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
 const SECRET = process.env.REVALIDATE_SECRET;
@@ -38,6 +38,10 @@ export async function POST(request: Request) {
   }
 
   const paths = pathsByType[documentType as DocumentType];
+
+  if (documentType === "siteSettings") {
+    revalidateTag("siteSettings", "default");
+  }
 
   paths.forEach((path) => revalidatePath(path));
 
