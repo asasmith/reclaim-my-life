@@ -23,6 +23,7 @@ vi.mock("next/navigation", () => ({
 
 vi.mock("next/image", () => ({
   default: ({ priority, ...props }: Record<string, unknown>) => {
+    void priority;
     return createElement("img", props);
   },
 }));
