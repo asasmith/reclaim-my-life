@@ -1,9 +1,18 @@
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
 const SECRET = process.env.REVALIDATE_SECRET;
 
-const supportedTypes = new Set(["homePage", "aboutPage", "contactPage", "registerPage"]);
+const pathsByType = {
+  homePage: ["/"],
+  aboutPage: ["/about"],
+  contactPage: ["/contact"],
+  registerPage: ["/register"],
+  siteSettings: ["/", "/about", "/contact", "/register"],
+} as const;
+
+type DocumentType = keyof typeof pathsByType;
+
 
 export async function POST(request: Request) {
   if (!SECRET) {
@@ -24,20 +33,17 @@ export async function POST(request: Request) {
   }
 
   const documentType = payload?._type;
-  if (!documentType || !supportedTypes.has(documentType)) {
+  if (!documentType || !Object.hasOwn(pathsByType, documentType)) {
     return NextResponse.json({ message: "Unsupported document type" }, { status: 400 });
   }
 
-  const pathsByType: Record<string, string> = {
-    homePage: "/",
-    aboutPage: "/about",
-    contactPage: "/contact",
-    registerPage: "/register",
-  };
+  const paths = pathsByType[documentType as DocumentType];
 
-  const path = pathsByType[documentType];
+  if (documentType === "siteSettings") {
+    revalidateTag("siteSettings", "default");
+  }
 
-  revalidatePath(path);
+  paths.forEach((path) => revalidatePath(path));
 
-  return NextResponse.json({ revalidated: true, path });
+  return NextResponse.json({ revalidated: true, paths });
 }

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { draftMode } from "next/headers";
 import ContactForm from "@/components/ContactForm";
 import { getContactPage, getSiteSettings } from "@/lib/sanity/queries";
+import { formatSocialLabel, getSafeSocialUrl } from "@/lib/socialLinks";
 
 export const revalidate = 3600;
 
@@ -32,10 +33,22 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Contact() {
   const { isEnabled } = await draftMode();
-  const [contactPage, siteSettings] = await Promise.all([
-    getContactPage({ preview: isEnabled }),
-    getSiteSettings({ preview: isEnabled }),
+  const contactPagePromise = getContactPage({ preview: isEnabled });
+  const siteSettingsPromise = getSiteSettings({ preview: isEnabled });
+  const [contactPageResult, siteSettingsResult] = await Promise.allSettled([
+    contactPagePromise,
+    siteSettingsPromise,
   ]);
+  const contactPage = contactPageResult.status === "fulfilled" ? contactPageResult.value : null;
+  const siteSettings = siteSettingsResult.status === "fulfilled" ? siteSettingsResult.value : null;
+
+  if (contactPageResult.status === "rejected") {
+    console.error("Failed to load contact page content:", contactPageResult.reason);
+  }
+
+  if (siteSettingsResult.status === "rejected") {
+    console.error("Failed to load site settings for contact page:", siteSettingsResult.reason);
+  }
 
   if (!contactPage) {
     return (
@@ -53,6 +66,17 @@ export default async function Contact() {
   }
 
   const contactInfo = siteSettings?.contactInfo;
+  const address = contactInfo?.address;
+  const cityState = [address?.city, address?.state].filter(Boolean).join(", ");
+  const cityStateZip = [cityState, address?.zip].filter(Boolean).join(" ");
+  const hasAddress = Boolean(address?.street || cityStateZip);
+  const socialLinks = (siteSettings?.socialLinks ?? [])
+    .map((link) => ({
+      ...link,
+      safeUrl: getSafeSocialUrl(link.url),
+    }))
+    .filter((link) => Boolean(link.safeUrl));
+  const hasSocialLinks = socialLinks.length > 0;
 
   return (
     <div className="bg-background">
@@ -89,16 +113,40 @@ export default async function Contact() {
                 </div>
               )}
 
-              {contactInfo?.address && (
+              {hasAddress && (
                 <div>
                   <h3 className="font-semibold text-foreground">
                     Address
                   </h3>
                   <p className="text-muted">
-                    {contactInfo.address.street}
-                    <br />
-                    {contactInfo.address.city}, {contactInfo.address.state} {contactInfo.address.zip}
+                    {address?.street && (
+                      <>
+                        {address.street}
+                        {cityStateZip && <br />}
+                      </>
+                    )}
+                    {cityStateZip}
                   </p>
+                </div>
+              )}
+
+              {hasSocialLinks && (
+                <div>
+                  <h3 className="font-semibold text-foreground">Social</h3>
+                  <ul className="mt-2 space-y-1 text-muted">
+                    {socialLinks.map((link) => (
+                      <li key={link._key ?? `${link.platform}-${link.url}`}>
+                        <a
+                          href={link.safeUrl}
+                          className="underline underline-offset-4 transition-colors hover:text-foreground"
+                          rel="noopener noreferrer"
+                          target="_blank"
+                        >
+                          {formatSocialLabel(link.platform)}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               )}
 
