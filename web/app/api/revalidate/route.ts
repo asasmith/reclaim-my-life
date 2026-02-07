@@ -13,7 +13,6 @@ const pathsByType = {
 
 type DocumentType = keyof typeof pathsByType;
 
-const supportedTypes = new Set(Object.keys(pathsByType) as DocumentType[]);
 
 export async function POST(request: Request) {
   if (!SECRET) {
@@ -34,11 +33,7 @@ export async function POST(request: Request) {
   }
 
   const documentType = payload?._type;
-  if (!documentType || !supportedTypes.has(documentType as DocumentType)) {
-    return NextResponse.json({ message: "Unsupported document type" }, { status: 400 });
-  }
-
-  if (!(documentType in pathsByType)) {
+  if (!documentType || !Object.hasOwn(pathsByType, documentType)) {
     return NextResponse.json({ message: "Unsupported document type" }, { status: 400 });
   }
 
