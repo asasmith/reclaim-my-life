@@ -107,6 +107,11 @@ describe("Footer", () => {
             platform: "instagram",
             url: "https://instagram.com/reclaim",
           },
+          {
+            _key: "social-unsafe",
+            platform: "facebook",
+            url: "javascript:alert('nope')",
+          },
         ]}
       />
     );
@@ -116,5 +121,6 @@ describe("Footer", () => {
     expect(screen.getByText(/Austin, TX 78701/)).toBeInTheDocument();
     expect(screen.getByText("Social:")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Instagram" })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Facebook" })).toBeNull();
   });
 });

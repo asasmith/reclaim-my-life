@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { draftMode } from "next/headers";
 import ContactForm from "@/components/ContactForm";
 import { getContactPage, getSiteSettings } from "@/lib/sanity/queries";
-import { formatSocialLabel } from "@/lib/socialLinks";
+import { formatSocialLabel, getSafeSocialUrl } from "@/lib/socialLinks";
 
 export const revalidate = 3600;
 
@@ -70,7 +70,12 @@ export default async function Contact() {
   const cityState = [address?.city, address?.state].filter(Boolean).join(", ");
   const cityStateZip = [cityState, address?.zip].filter(Boolean).join(" ");
   const hasAddress = Boolean(address?.street || cityStateZip);
-  const socialLinks = (siteSettings?.socialLinks ?? []).filter((link) => link.url);
+  const socialLinks = (siteSettings?.socialLinks ?? [])
+    .map((link) => ({
+      ...link,
+      safeUrl: getSafeSocialUrl(link.url),
+    }))
+    .filter((link) => Boolean(link.safeUrl));
   const hasSocialLinks = socialLinks.length > 0;
 
   return (
@@ -132,7 +137,7 @@ export default async function Contact() {
                     {socialLinks.map((link) => (
                       <li key={link._key ?? `${link.platform}-${link.url}`}>
                         <a
-                          href={link.url}
+                          href={link.safeUrl}
                           className="underline underline-offset-4 transition-colors hover:text-foreground"
                           rel="noopener noreferrer"
                           target="_blank"

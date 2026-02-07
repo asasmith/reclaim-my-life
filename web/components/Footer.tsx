@@ -1,4 +1,4 @@
-import { formatSocialLabel } from "@/lib/socialLinks";
+import { formatSocialLabel, getSafeSocialUrl } from "@/lib/socialLinks";
 import type { ContactInfo, SocialLink } from "@/lib/sanity/types";
 
 type FooterProps = Readonly<{
@@ -13,7 +13,12 @@ export default function Footer({ contactInfo, socialLinks }: FooterProps) {
   const cityState = [address?.city, address?.state].filter(Boolean).join(", ");
   const cityStateZip = [cityState, address?.zip].filter(Boolean).join(" ");
   const hasAddress = Boolean(address?.street || cityStateZip);
-  const filteredSocialLinks = (socialLinks ?? []).filter((link) => link.url);
+  const filteredSocialLinks = (socialLinks ?? [])
+    .map((link) => ({
+      ...link,
+      safeUrl: getSafeSocialUrl(link.url),
+    }))
+    .filter((link) => Boolean(link.safeUrl));
   const hasSocialLinks = filteredSocialLinks.length > 0;
   const hasContactDetails = Boolean(phone || email || hasAddress || hasSocialLinks);
 
@@ -59,7 +64,7 @@ export default function Footer({ contactInfo, socialLinks }: FooterProps) {
                       {filteredSocialLinks.map((link) => (
                         <a
                           key={link._key ?? `${link.platform}-${link.url}`}
-                          href={link.url}
+                          href={link.safeUrl}
                           className="underline underline-offset-4 transition-colors hover:text-foreground"
                           rel="noopener noreferrer"
                           target="_blank"

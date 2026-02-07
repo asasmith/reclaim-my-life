@@ -104,6 +104,11 @@ describe("Contact page", () => {
           platform: "instagram",
           url: "https://instagram.com/reclaim",
         },
+        {
+          _key: "social-unsafe",
+          platform: "twitter",
+          url: "javascript:alert('nope')",
+        },
       ],
     });
 
@@ -119,5 +124,6 @@ describe("Contact page", () => {
       "href",
       "https://instagram.com/reclaim"
     );
+    expect(screen.queryByRole("link", { name: "Twitter" })).toBeNull();
   });
 });
