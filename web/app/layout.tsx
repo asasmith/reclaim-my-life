@@ -4,6 +4,7 @@ import { draftMode } from "next/headers";
 import Footer from "@/components/Footer";
 import Navigation from "@/components/Navigation";
 import PreviewBanner from "@/components/PreviewBanner";
+import { getSiteSettings } from "@/lib/sanity/queries";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -28,6 +29,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const { isEnabled } = await draftMode();
+  const siteSettings = await getSiteSettings({ preview: isEnabled });
 
   return (
     <html lang="en">
@@ -39,7 +41,7 @@ export default async function RootLayout({
         <PreviewBanner isPreview={isEnabled} />
         <Navigation />
         <main className="min-h-screen">{children}</main>
-        <Footer />
+        <Footer contactInfo={siteSettings?.contactInfo} />
       </body>
     </html>
   );

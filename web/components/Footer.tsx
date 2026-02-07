@@ -1,4 +1,14 @@
-export default function Footer() {
+import type { ContactInfo } from "@/lib/sanity/types";
+
+type FooterProps = Readonly<{
+  contactInfo?: ContactInfo;
+}>;
+
+export default function Footer({ contactInfo }: FooterProps) {
+  const phone = contactInfo?.phone;
+  const email = contactInfo?.email;
+  const hasContactInfo = Boolean(phone || email);
+
   return (
     <footer className="bg-surface">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
@@ -16,11 +26,17 @@ export default function Footer() {
             <h3 className="text-lg font-semibold text-foreground">
               Contact
             </h3>
-            <p className="mt-2 text-sm text-muted">
-              Phone: (555) 123-4567
-              <br />
-              Email: info@reclaimmylife.org
-            </p>
+            {hasContactInfo ? (
+              <p className="mt-2 text-sm text-muted">
+                {phone && <>Phone: {phone}</>}
+                {phone && email && <br />}
+                {email && <>Email: {email}</>}
+              </p>
+            ) : (
+              <p className="mt-2 text-sm text-muted">
+                Contact details coming soon.
+              </p>
+            )}
           </div>
 
           <div>

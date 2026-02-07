@@ -3,7 +3,13 @@ import { NextResponse } from "next/server";
 
 const SECRET = process.env.REVALIDATE_SECRET;
 
-const supportedTypes = new Set(["homePage", "aboutPage", "contactPage", "registerPage"]);
+const supportedTypes = new Set([
+  "homePage",
+  "aboutPage",
+  "contactPage",
+  "registerPage",
+  "siteSettings",
+]);
 
 export async function POST(request: Request) {
   if (!SECRET) {
@@ -28,16 +34,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Unsupported document type" }, { status: 400 });
   }
 
-  const pathsByType: Record<string, string> = {
-    homePage: "/",
-    aboutPage: "/about",
-    contactPage: "/contact",
-    registerPage: "/register",
+  const pathsByType: Record<string, string[]> = {
+    homePage: ["/"],
+    aboutPage: ["/about"],
+    contactPage: ["/contact"],
+    registerPage: ["/register"],
+    siteSettings: ["/", "/about", "/contact", "/register"],
   };
 
-  const path = pathsByType[documentType];
+  const paths = pathsByType[documentType];
 
-  revalidatePath(path);
+  paths.forEach((path) => revalidatePath(path));
 
-  return NextResponse.json({ revalidated: true, path });
+  return NextResponse.json({ revalidated: true, paths });
 }
