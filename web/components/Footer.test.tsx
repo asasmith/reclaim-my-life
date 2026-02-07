@@ -22,4 +22,44 @@ describe("Footer", () => {
     const copyright = screen.getByText(/Reclaim My Life\. All rights reserved\./);
     expect(copyright).toHaveTextContent(year.toString());
   });
+
+  it("renders only the provided contact details", () => {
+    render(
+      <Footer
+        contactInfo={{
+          phone: "(555) 123-4567",
+          email: "",
+          address: {
+            street: "",
+            city: "",
+            state: "",
+            zip: "",
+          },
+        }}
+      />
+    );
+
+    expect(screen.getByText("Phone: (555) 123-4567")).toBeInTheDocument();
+    expect(screen.queryByText(/Email:/)).toBeNull();
+  });
+
+  it("omits the contact block when details are missing", () => {
+    render(
+      <Footer
+        contactInfo={{
+          phone: "",
+          email: "",
+          address: {
+            street: "",
+            city: "",
+            state: "",
+            zip: "",
+          },
+        }}
+      />
+    );
+
+    expect(screen.queryByText(/Phone:/)).toBeNull();
+    expect(screen.queryByText(/Email:/)).toBeNull();
+  });
 });
