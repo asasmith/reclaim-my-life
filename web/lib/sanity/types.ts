@@ -22,6 +22,7 @@ export type Button = {
 
 // Social media link
 export type SocialLink = {
+  _key?: string;
   platform: 'facebook' | 'instagram' | 'twitter' | 'linkedin' | 'youtube';
   url: string;
 };

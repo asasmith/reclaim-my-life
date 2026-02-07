@@ -63,6 +63,7 @@ const siteSettingsQuery = `*[_type == "siteSettings"][0]{
     }
   },
   socialLinks[] {
+    _key,
     platform,
     url
   }

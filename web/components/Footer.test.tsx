@@ -16,7 +16,13 @@ describe("Footer", () => {
             zip: "80202",
           },
         }}
-        socialLinks={[{ platform: "facebook", url: "https://facebook.com/reclaim" }]}
+        socialLinks={[
+          {
+            _key: "social-facebook",
+            platform: "facebook",
+            url: "https://facebook.com/reclaim",
+          },
+        ]}
       />
     );
 
@@ -95,7 +101,13 @@ describe("Footer", () => {
             zip: "78701",
           },
         }}
-        socialLinks={[{ platform: "instagram", url: "https://instagram.com/reclaim" }]}
+        socialLinks={[
+          {
+            _key: "social-instagram",
+            platform: "instagram",
+            url: "https://instagram.com/reclaim",
+          },
+        ]}
       />
     );
 

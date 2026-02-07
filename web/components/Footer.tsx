@@ -1,13 +1,10 @@
+import { formatSocialLabel } from "@/lib/socialLinks";
 import type { ContactInfo, SocialLink } from "@/lib/sanity/types";
 
 type FooterProps = Readonly<{
   contactInfo?: ContactInfo;
   socialLinks?: SocialLink[];
 }>;
-
-const formatSocialLabel = (platform: SocialLink["platform"]) => {
-  return platform.charAt(0).toUpperCase() + platform.slice(1);
-};
 
 export default function Footer({ contactInfo, socialLinks }: FooterProps) {
   const phone = contactInfo?.phone;
@@ -61,10 +58,10 @@ export default function Footer({ contactInfo, socialLinks }: FooterProps) {
                     <div className="flex flex-wrap gap-3">
                       {filteredSocialLinks.map((link) => (
                         <a
-                          key={link.platform}
+                          key={link._key ?? `${link.platform}-${link.url}`}
                           href={link.url}
                           className="underline underline-offset-4 transition-colors hover:text-foreground"
-                          rel="noreferrer"
+                          rel="noopener noreferrer"
                           target="_blank"
                         >
                           {formatSocialLabel(link.platform)}

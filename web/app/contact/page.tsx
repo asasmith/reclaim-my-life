@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { draftMode } from "next/headers";
 import ContactForm from "@/components/ContactForm";
 import { getContactPage, getSiteSettings } from "@/lib/sanity/queries";
-import type { SocialLink } from "@/lib/sanity/types";
+import { formatSocialLabel } from "@/lib/socialLinks";
 
 export const revalidate = 3600;
 
@@ -73,10 +73,6 @@ export default async function Contact() {
   const socialLinks = (siteSettings?.socialLinks ?? []).filter((link) => link.url);
   const hasSocialLinks = socialLinks.length > 0;
 
-  const formatSocialLabel = (platform: SocialLink["platform"]) => {
-    return platform.charAt(0).toUpperCase() + platform.slice(1);
-  };
-
   return (
     <div className="bg-background">
       <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
@@ -134,11 +130,11 @@ export default async function Contact() {
                   <h3 className="font-semibold text-foreground">Social</h3>
                   <ul className="mt-2 space-y-1 text-muted">
                     {socialLinks.map((link) => (
-                      <li key={link.platform}>
+                      <li key={link._key ?? `${link.platform}-${link.url}`}>
                         <a
                           href={link.url}
                           className="underline underline-offset-4 transition-colors hover:text-foreground"
-                          rel="noreferrer"
+                          rel="noopener noreferrer"
                           target="_blank"
                         >
                           {formatSocialLabel(link.platform)}

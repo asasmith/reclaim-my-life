@@ -95,10 +95,12 @@ describe("Contact page", () => {
       ...baseSiteSettings,
       socialLinks: [
         {
+          _key: "social-facebook",
           platform: "facebook",
           url: "https://facebook.com/reclaim",
         },
         {
+          _key: "social-instagram",
           platform: "instagram",
           url: "https://instagram.com/reclaim",
         },
