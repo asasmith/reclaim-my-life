@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { getClient } from "./client";
 import type { AboutPage, ContactPage, HomePage, RegisterPage, SiteSettings } from "./types";
 
@@ -140,8 +141,12 @@ export async function getHomePage(options?: { preview?: boolean }): Promise<Home
   return await getClient(options).fetch(homePageQuery);
 }
 
+const getSiteSettingsCached = cache(async (preview?: boolean): Promise<SiteSettings | null> => {
+  return await getClient({ preview }).fetch(siteSettingsQuery);
+});
+
 export async function getSiteSettings(options?: { preview?: boolean }): Promise<SiteSettings | null> {
-  return await getClient(options).fetch(siteSettingsQuery);
+  return await getSiteSettingsCached(options?.preview);
 }
 
 export async function getAboutPage(options?: { preview?: boolean }): Promise<AboutPage | null> {
