@@ -32,10 +32,22 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Contact() {
   const { isEnabled } = await draftMode();
-  const [contactPage, siteSettings] = await Promise.all([
-    getContactPage({ preview: isEnabled }),
-    getSiteSettings({ preview: isEnabled }),
+  const contactPagePromise = getContactPage({ preview: isEnabled });
+  const siteSettingsPromise = getSiteSettings({ preview: isEnabled });
+  const [contactPageResult, siteSettingsResult] = await Promise.allSettled([
+    contactPagePromise,
+    siteSettingsPromise,
   ]);
+  const contactPage = contactPageResult.status === "fulfilled" ? contactPageResult.value : null;
+  const siteSettings = siteSettingsResult.status === "fulfilled" ? siteSettingsResult.value : null;
+
+  if (contactPageResult.status === "rejected") {
+    console.error("Failed to load contact page content:", contactPageResult.reason);
+  }
+
+  if (siteSettingsResult.status === "rejected") {
+    console.error("Failed to load site settings for contact page:", siteSettingsResult.reason);
+  }
 
   if (!contactPage) {
     return (

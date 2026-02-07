@@ -29,7 +29,13 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const { isEnabled } = await draftMode();
-  const siteSettings = await getSiteSettings({ preview: isEnabled });
+  let siteSettings = null;
+
+  try {
+    siteSettings = await getSiteSettings({ preview: isEnabled });
+  } catch (error) {
+    console.error("Failed to load site settings for footer:", error);
+  }
 
   return (
     <html lang="en">
