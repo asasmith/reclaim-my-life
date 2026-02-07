@@ -53,6 +53,10 @@ export default async function Contact() {
   }
 
   const contactInfo = siteSettings?.contactInfo;
+  const address = contactInfo?.address;
+  const cityState = [address?.city, address?.state].filter(Boolean).join(", ");
+  const cityStateZip = [cityState, address?.zip].filter(Boolean).join(" ");
+  const hasAddress = Boolean(address?.street || cityStateZip);
 
   return (
     <div className="bg-background">
@@ -89,15 +93,19 @@ export default async function Contact() {
                 </div>
               )}
 
-              {contactInfo?.address && (
+              {hasAddress && (
                 <div>
                   <h3 className="font-semibold text-foreground">
                     Address
                   </h3>
                   <p className="text-muted">
-                    {contactInfo.address.street}
-                    <br />
-                    {contactInfo.address.city}, {contactInfo.address.state} {contactInfo.address.zip}
+                    {address?.street && (
+                      <>
+                        {address.street}
+                        {cityStateZip && <br />}
+                      </>
+                    )}
+                    {cityStateZip}
                   </p>
                 </div>
               )}

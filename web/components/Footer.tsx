@@ -7,7 +7,6 @@ type FooterProps = Readonly<{
 export default function Footer({ contactInfo }: FooterProps) {
   const phone = contactInfo?.phone;
   const email = contactInfo?.email;
-  const hasContactInfo = Boolean(phone || email);
 
   return (
     <footer className="bg-surface">
@@ -26,17 +25,11 @@ export default function Footer({ contactInfo }: FooterProps) {
             <h3 className="text-lg font-semibold text-foreground">
               Contact
             </h3>
-            {hasContactInfo ? (
-              <p className="mt-2 text-sm text-muted">
-                {phone && <>Phone: {phone}</>}
-                {phone && email && <br />}
-                {email && <>Email: {email}</>}
-              </p>
-            ) : (
-              <p className="mt-2 text-sm text-muted">
-                Contact details coming soon.
-              </p>
-            )}
+            <p className="mt-2 text-sm text-muted">
+              {phone && <>Phone: {phone}</>}
+              {phone && email && <br />}
+              {email && <>Email: {email}</>}
+            </p>
           </div>
 
           <div>
