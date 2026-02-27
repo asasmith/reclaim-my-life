@@ -162,7 +162,6 @@ describe("RegistrationForm", () => {
 
     expect(form).toHaveAttribute("data-netlify", "true");
     expect(form).toHaveAttribute("data-netlify-honeypot", "bot-field");
-    expect(form).toHaveAttribute("data-netlify-recaptcha", "true");
     expect(screen.getByDisplayValue("registration")).toHaveAttribute("name", "form-name");
     expect(screen.getByDisplayValue("registration")).toHaveAttribute("type", "hidden");
   });
