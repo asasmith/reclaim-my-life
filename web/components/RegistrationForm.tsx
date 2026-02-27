@@ -110,7 +110,6 @@ export default function RegistrationForm({
       method="POST"
       data-netlify="true"
       data-netlify-honeypot="bot-field"
-      data-netlify-recaptcha="true"
       onSubmit={handleSubmit}
       className="space-y-8 rounded-lg bg-surface p-8"
     >
@@ -272,7 +271,6 @@ export default function RegistrationForm({
       </div>
 
       <div className="space-y-4">
-        {submitStatus !== "success" ? <div data-netlify-recaptcha="true"></div> : null}
         <button
           type="submit"
           disabled={isSubmitting}
