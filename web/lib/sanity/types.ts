@@ -101,23 +101,11 @@ export type ContactPage = {
   seo?: SEO;
 };
 
-// Register Page document
-export type RegisterFormField = {
-  fieldKey: string;
-  label: string;
-  type: 'text' | 'textarea' | 'email' | 'tel' | 'date' | 'select' | 'radio' | 'checkbox';
-  required?: boolean;
-  placeholder?: string;
-  helpText?: string;
-  options?: string[];
-};
-
 export type RegisterPage = {
   _id: string;
   _type: 'registerPage';
   title: string;
   subtitle: string;
-  formFields: RegisterFormField[];
   thankYou?: {
     title: string;
     message: string;
