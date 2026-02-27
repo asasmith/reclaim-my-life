@@ -2,52 +2,6 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import userEvent from "@testing-library/user-event";
 import RegistrationForm from "@/components/RegistrationForm";
 import { render, screen, waitFor } from "@/tests/helpers/test-utils";
-import type { RegisterFormField } from "@/lib/sanity/types";
-
-const formFields: RegisterFormField[] = [
-  {
-    fieldKey: "first-name",
-    label: "First Name",
-    type: "text",
-    required: true,
-  },
-  {
-    fieldKey: "last-name",
-    label: "Last Name",
-    type: "text",
-    required: true,
-  },
-  {
-    fieldKey: "email",
-    label: "Email",
-    type: "email",
-    required: true,
-  },
-  {
-    fieldKey: "contact-method",
-    label: "Preferred Contact Method",
-    type: "select",
-    options: ["Phone", "Email"],
-    required: true,
-  },
-  {
-    fieldKey: "program-interest",
-    label: "Program Interest",
-    type: "radio",
-    options: ["Residential", "Outpatient"],
-  },
-  {
-    fieldKey: "consent",
-    label: "I agree to be contacted",
-    type: "checkbox",
-    required: true,
-  },
-  {
-    fieldKey: "notes",
-    label: "Notes",
-    type: "textarea",
-  },
-];
 
 const thankYou = {
   title: "Thanks for reaching out",
@@ -55,11 +9,20 @@ const thankYou = {
 };
 
 const fillRequiredFields = async (user: ReturnType<typeof userEvent.setup>) => {
-  await user.type(screen.getByLabelText(/First Name/), "John");
-  await user.type(screen.getByLabelText(/Last Name/), "Doe");
-  await user.type(screen.getByLabelText(/Email/), "john.doe@example.com");
-  await user.selectOptions(screen.getByLabelText(/Preferred Contact Method/), "Phone");
-  await user.click(screen.getByLabelText(/I agree to be contacted/));
+  await user.type(screen.getByLabelText(/Name/, { selector: "#name" }), "John Doe");
+  await user.type(screen.getByLabelText(/Date of Birth/), "1990-01-01");
+  await user.type(screen.getByLabelText(/Phone Number/), "555-123-4567");
+  await user.type(
+    screen.getByLabelText(/My drug\(s\) of choice/),
+    "Alcohol"
+  );
+  await user.click(screen.getByLabelText("Yes", { selector: "input[name=\"drug-addict-alcoholic\"]" }));
+  await user.click(screen.getByLabelText("No", { selector: "input[name=\"sex-offender\"]" }));
+  await user.type(screen.getByLabelText(/Emergency Contact Name/), "Jane Doe");
+  await user.click(
+    screen.getByLabelText(/I understand that Twelve-Step Recovery is a MUST to stay here/)
+  );
+  await user.type(screen.getByLabelText(/Today's Date/), "2026-02-27");
 };
 
 afterEach(() => {
@@ -67,30 +30,27 @@ afterEach(() => {
 });
 
 describe("RegistrationForm", () => {
-  it("renders fields from Sanity", () => {
-    render(<RegistrationForm formFields={formFields} />);
+  it("renders the registration fields", () => {
+    render(<RegistrationForm />);
 
-    expect(screen.getByLabelText(/First Name/)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Last Name/)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Email/)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Preferred Contact Method/)).toBeInTheDocument();
-    expect(screen.getByText(/Program Interest/)).toBeInTheDocument();
-    expect(screen.getByLabelText(/I agree to be contacted/)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Notes/)).toBeInTheDocument();
-  });
-
-  it("shows preview loading state when draft fields are missing", () => {
-    render(<RegistrationForm formFields={null} isPreview />);
-
-    expect(screen.getByText("Loading draft form fields...")).toBeInTheDocument();
-  });
-
-  it("shows empty state when no fields are configured", () => {
-    render(<RegistrationForm formFields={[]} />);
-
+    expect(screen.getByLabelText(/Name/, { selector: "#name" })).toBeInTheDocument();
+    expect(screen.getByLabelText(/Date of Birth/)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Phone Number/)).toBeInTheDocument();
+    expect(screen.getByLabelText(/My drug\(s\) of choice/)).toBeInTheDocument();
+    expect(screen.getByText(/I am a drug addict or an alcoholic/)).toBeInTheDocument();
+    expect(screen.getByText(/Sex Offender/)).toBeInTheDocument();
     expect(
-      screen.getByText("Form fields are empty. Please add fields in the Register Page document.")
+      screen.getByLabelText(/Medications, including doses, I am currently taking/)
     ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText(/Upcoming court dates, probation, drug court, pre-trial, etc/)
+    ).toBeInTheDocument();
+    expect(screen.getByLabelText(/Emergency Contact Name/)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Emergency Contact Phone/)).toBeInTheDocument();
+    expect(
+      screen.getByLabelText(/I understand that Twelve-Step Recovery is a MUST to stay here/)
+    ).toBeInTheDocument();
+    expect(screen.getByLabelText(/Today's Date/)).toBeInTheDocument();
   });
 
   it("submits the form and shows success message", async () => {
@@ -99,7 +59,7 @@ describe("RegistrationForm", () => {
 
     vi.stubGlobal("fetch", fetchSpy);
 
-    const { container } = render(<RegistrationForm formFields={formFields} thankYou={thankYou} />);
+    const { container } = render(<RegistrationForm thankYou={thankYou} />);
 
     await fillRequiredFields(user);
     await user.click(screen.getByRole("button", { name: "Submit Registration" }));
@@ -109,11 +69,15 @@ describe("RegistrationForm", () => {
       expect(screen.getByText(thankYou.message)).toBeInTheDocument();
     });
 
-    expect(screen.getByLabelText(/First Name/)).toHaveValue("");
-    expect(screen.getByLabelText(/Last Name/)).toHaveValue("");
-    expect(screen.getByLabelText(/Email/)).toHaveValue("");
-    expect(screen.getByLabelText(/Preferred Contact Method/)).toHaveValue("");
-    expect(screen.getByLabelText(/I agree to be contacted/)).not.toBeChecked();
+    expect(screen.getByLabelText(/Name/, { selector: "#name" })).toHaveValue("");
+    expect(screen.getByLabelText(/Date of Birth/)).toHaveValue("");
+    expect(screen.getByLabelText(/Phone Number/)).toHaveValue("");
+    expect(screen.getByLabelText(/My drug\(s\) of choice/)).toHaveValue("");
+    expect(screen.getByLabelText(/Emergency Contact Name/)).toHaveValue("");
+    expect(
+      screen.getByLabelText(/I understand that Twelve-Step Recovery is a MUST to stay here/)
+    ).not.toBeChecked();
+    expect(screen.getByLabelText(/Today's Date/)).toHaveValue("");
     expect(container.querySelector("div[data-netlify-recaptcha=\"true\"]")).toBeNull();
 
     expect(fetchSpy).toHaveBeenCalledWith(
@@ -127,11 +91,15 @@ describe("RegistrationForm", () => {
 
     const requestBody = fetchSpy.mock.calls[0]?.[1]?.body as string;
 
-    expect(requestBody).toContain("first-name=John");
-    expect(requestBody).toContain("last-name=Doe");
-    expect(requestBody).toContain("email=john.doe%40example.com");
-    expect(requestBody).toContain("contact-method=Phone");
-    expect(requestBody).toContain("consent=yes");
+    expect(requestBody).toContain("name=John+Doe");
+    expect(requestBody).toContain("date-of-birth=1990-01-01");
+    expect(requestBody).toContain("phone-number=555-123-4567");
+    expect(requestBody).toContain("drug-of-choice=Alcohol");
+    expect(requestBody).toContain("drug-addict-alcoholic=Yes");
+    expect(requestBody).toContain("sex-offender=No");
+    expect(requestBody).toContain("emergency-contact-name=Jane+Doe");
+    expect(requestBody).toContain("twelve-step-agreement=yes");
+    expect(requestBody).toContain("todays-date=2026-02-27");
   });
 
   it("shows an error message when submission fails", async () => {
@@ -141,7 +109,7 @@ describe("RegistrationForm", () => {
 
     vi.stubGlobal("fetch", fetchSpy);
 
-    render(<RegistrationForm formFields={formFields} />);
+    render(<RegistrationForm />);
 
     await fillRequiredFields(user);
     await user.click(screen.getByRole("button", { name: "Submit Registration" }));
@@ -156,7 +124,7 @@ describe("RegistrationForm", () => {
   });
 
   it("includes Netlify form attributes", () => {
-    const { container } = render(<RegistrationForm formFields={formFields} />);
+    const { container } = render(<RegistrationForm />);
 
     const form = container.querySelector("form");
 
