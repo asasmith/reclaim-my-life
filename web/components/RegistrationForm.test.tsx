@@ -117,7 +117,7 @@ describe("RegistrationForm", () => {
     expect(container.querySelector("div[data-netlify-recaptcha=\"true\"]")).toBeNull();
 
     expect(fetchSpy).toHaveBeenCalledWith(
-      "/",
+      "/netlify-forms.html",
       expect.objectContaining({
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
