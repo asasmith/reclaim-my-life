@@ -46,7 +46,7 @@ export default function ContactForm({ formTitle }: ContactFormProps) {
     });
 
     try {
-      const response = await fetch("/", {
+      const response = await fetch("/netlify-forms.html", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: params.toString(),
@@ -96,6 +96,7 @@ export default function ContactForm({ formTitle }: ContactFormProps) {
         data-netlify="true"
         data-netlify-honeypot="bot-field"
         onSubmit={handleSubmit}
+        action="/netlify-forms.html"
         className="mt-6 space-y-4"
       >
         <input type="hidden" name="form-name" value="contact" />

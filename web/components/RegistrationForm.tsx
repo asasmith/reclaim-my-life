@@ -83,7 +83,7 @@ export default function RegistrationForm({
         params.append(key, String(value));
       });
 
-      const response = await fetch("/", {
+      const response = await fetch("/netlify-forms.html", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: params.toString(),
@@ -111,6 +111,7 @@ export default function RegistrationForm({
       data-netlify="true"
       data-netlify-honeypot="bot-field"
       onSubmit={handleSubmit}
+      action="/netlify-forms.html"
       className="space-y-8 rounded-lg bg-surface p-8"
     >
       <input type="hidden" name="form-name" value="registration" />
