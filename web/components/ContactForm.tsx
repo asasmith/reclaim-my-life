@@ -95,7 +95,6 @@ export default function ContactForm({ formTitle }: ContactFormProps) {
         method="POST"
         data-netlify="true"
         data-netlify-honeypot="bot-field"
-        data-netlify-recaptcha="true"
         onSubmit={handleSubmit}
         className="mt-6 space-y-4"
       >
@@ -194,7 +193,6 @@ export default function ContactForm({ formTitle }: ContactFormProps) {
         </div>
 
         <div className="space-y-4">
-          {submitStatus !== "success" ? <div data-netlify-recaptcha="true"></div> : null}
           <button
             type="submit"
             disabled={isSubmitting}
