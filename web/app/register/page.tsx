@@ -64,6 +64,8 @@ export default async function Register() {
 
         <div className="mt-12">
           <RegistrationForm
+            formFields={registerPage.formFields}
+            isPreview={isEnabled}
             thankYou={registerPage.thankYou}
           />
         </div>

@@ -2,7 +2,12 @@
 
 import { useRef, useState } from "react";
 
+import type { RegisterFormField } from "@/lib/sanity/types";
+import { normalizeFieldKey } from "../../shared/normalizeFieldKey.mjs";
+
 type RegistrationFormProps = Readonly<{
+  formFields: RegisterFormField[] | null | undefined;
+  isPreview?: boolean;
   thankYou?: {
     title: string;
     message: string;
@@ -11,10 +16,43 @@ type RegistrationFormProps = Readonly<{
 
 type SubmitStatus = "idle" | "success" | "error";
 
-export default function RegistrationForm({ thankYou }: RegistrationFormProps) {
+const isFullWidth = (type: RegisterFormField["type"]) =>
+  type === "textarea" || type === "radio" || type === "checkbox";
+
+const getNormalizedFields = (formFields: RegisterFormField[]) =>
+  formFields
+    .map((field) => ({
+      ...field,
+      normalizedKey: normalizeFieldKey(field.fieldKey || field.label || ""),
+    }))
+    .filter((field) => field.normalizedKey.length > 0);
+
+export default function RegistrationForm({
+  formFields,
+  isPreview,
+  thankYou,
+}: RegistrationFormProps) {
   const formRef = useRef<HTMLFormElement | null>(null);
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>("idle");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  if (!formFields && isPreview) {
+    return (
+      <div className="rounded-lg bg-surface p-8 text-center text-muted">
+        Loading draft form fields...
+      </div>
+    );
+  }
+
+  const fields = getNormalizedFields(formFields ?? []);
+
+  if (fields.length === 0) {
+    return (
+      <div className="rounded-lg bg-surface p-8 text-center text-muted">
+        Form fields are empty. Please add fields in the Register Page document.
+      </div>
+    );
+  }
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -84,206 +122,144 @@ export default function RegistrationForm({ thankYou }: RegistrationFormProps) {
       />
 
       <div className="grid gap-6 md:grid-cols-2">
-        <div className="space-y-2">
-          <label htmlFor="name" className="block text-sm font-medium text-muted">
-            Name <span className="text-accent">*</span>
-          </label>
-          <input
-            id="name"
-            name="name"
-            type="text"
-            required
-            placeholder="Name"
-            className="mt-1 w-full rounded-md border border-border bg-background px-4 py-2 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent"
-          />
-        </div>
+        {fields.map((field) => {
+          const fieldId = field.normalizedKey;
+          const requiredMark = field.required ? (
+            <span className="text-accent">*</span>
+          ) : null;
+          const fieldWrapperClass = isFullWidth(field.type)
+            ? "space-y-2 md:col-span-2"
+            : "space-y-2";
 
-        <div className="space-y-2">
-          <label htmlFor="date-of-birth" className="block text-sm font-medium text-muted">
-            Date of Birth <span className="text-accent">*</span>
-          </label>
-          <input
-            id="date-of-birth"
-            name="date-of-birth"
-            type="date"
-            required
-            placeholder="Date of Birth"
-            className="mt-1 w-full rounded-md border border-border bg-background px-4 py-2 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent"
-          />
-        </div>
+          if (field.type === "textarea") {
+            return (
+              <div key={fieldId} className={fieldWrapperClass}>
+                <label
+                  htmlFor={fieldId}
+                  className="block text-sm font-medium text-muted"
+                >
+                  {field.label} {requiredMark}
+                </label>
+                <textarea
+                  id={fieldId}
+                  name={fieldId}
+                  rows={4}
+                  required={field.required}
+                  placeholder={field.placeholder}
+                  className="mt-1 w-full rounded-md border border-border bg-background px-4 py-2 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent"
+                />
+                {field.helpText ? (
+                  <p className="text-sm text-muted">{field.helpText}</p>
+                ) : null}
+              </div>
+            );
+          }
 
-        <div className="space-y-2">
-          <label htmlFor="phone-number" className="block text-sm font-medium text-muted">
-            Phone Number <span className="text-accent">*</span>
-          </label>
-          <input
-            id="phone-number"
-            name="phone-number"
-            type="tel"
-            required
-            className="mt-1 w-full rounded-md border border-border bg-background px-4 py-2 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent"
-          />
-        </div>
+          if (field.type === "select") {
+            return (
+              <div key={fieldId} className={fieldWrapperClass}>
+                <label
+                  htmlFor={fieldId}
+                  className="block text-sm font-medium text-muted"
+                >
+                  {field.label} {requiredMark}
+                </label>
+                <select
+                  id={fieldId}
+                  name={fieldId}
+                  required={field.required}
+                  className="mt-1 w-full rounded-md border border-border bg-background px-4 py-2 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent"
+                >
+                  <option value="">Select an option</option>
+                  {(field.options ?? []).map((option) => (
+                    <option key={`${fieldId}-${option}`} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+                {field.helpText ? (
+                  <p className="text-sm text-muted">{field.helpText}</p>
+                ) : null}
+              </div>
+            );
+          }
 
-        <div className="space-y-2 md:col-span-2">
-          <label
-            htmlFor="drug-of-choice"
-            className="block text-sm font-medium text-muted"
-          >
-            My drug(s) of choice (including alcohol) are <span className="text-accent">*</span>
-          </label>
-          <textarea
-            id="drug-of-choice"
-            name="drug-of-choice"
-            rows={4}
-            required
-            className="mt-1 w-full rounded-md border border-border bg-background px-4 py-2 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent"
-          />
-        </div>
+          if (field.type === "radio") {
+            return (
+              <fieldset key={fieldId} className={fieldWrapperClass}>
+                <legend className="block text-sm font-medium text-muted">
+                  {field.label} {requiredMark}
+                </legend>
+                <div className="mt-3 space-y-2">
+                  {(field.options ?? []).map((option, index) => {
+                    const optionId = `${fieldId}-${index}`;
+                    return (
+                      <label key={optionId} className="flex items-center gap-3">
+                        <input
+                          id={optionId}
+                          type="radio"
+                          name={fieldId}
+                          value={option}
+                          required={field.required && index === 0}
+                          className="h-4 w-4 border-border text-accent focus:ring-accent"
+                        />
+                        <span className="text-foreground">{option}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+                {field.helpText ? (
+                  <p className="mt-2 text-sm text-muted">{field.helpText}</p>
+                ) : null}
+              </fieldset>
+            );
+          }
 
-        <fieldset className="space-y-2 md:col-span-2">
-          <legend className="block text-sm font-medium text-muted">
-            I am a drug addict or an alcoholic? <span className="text-accent">*</span>
-          </legend>
-          <div className="mt-3 space-y-2">
-            <label className="flex items-center gap-3">
+          if (field.type === "checkbox") {
+            return (
+              <div key={fieldId} className={fieldWrapperClass}>
+                <label className="flex items-start gap-3">
+                  <input
+                    id={fieldId}
+                    type="checkbox"
+                    name={fieldId}
+                    value="yes"
+                    required={field.required}
+                    className="self-center h-4 w-4 rounded border-border text-accent focus:ring-accent"
+                  />
+                  <span className="text-sm font-medium text-muted">
+                    {field.label} {requiredMark}
+                  </span>
+                </label>
+                {field.helpText ? (
+                  <p className="text-sm text-muted">{field.helpText}</p>
+                ) : null}
+              </div>
+            );
+          }
+
+          return (
+            <div key={fieldId} className={fieldWrapperClass}>
+              <label
+                htmlFor={fieldId}
+                className="block text-sm font-medium text-muted"
+              >
+                {field.label} {requiredMark}
+              </label>
               <input
-                id="drug-addict-alcoholic-yes"
-                type="radio"
-                name="drug-addict-alcoholic"
-                value="Yes"
-                required
-                className="h-4 w-4 border-border text-accent focus:ring-accent"
+                id={fieldId}
+                type={field.type}
+                name={fieldId}
+                required={field.required}
+                placeholder={field.placeholder}
+                className="mt-1 w-full rounded-md border border-border bg-background px-4 py-2 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent"
               />
-              <span className="text-foreground">Yes</span>
-            </label>
-            <label className="flex items-center gap-3">
-              <input
-                id="drug-addict-alcoholic-no"
-                type="radio"
-                name="drug-addict-alcoholic"
-                value="No"
-                className="h-4 w-4 border-border text-accent focus:ring-accent"
-              />
-              <span className="text-foreground">No</span>
-            </label>
-          </div>
-        </fieldset>
-
-        <fieldset className="space-y-2 md:col-span-2">
-          <legend className="block text-sm font-medium text-muted">
-            Sex Offender <span className="text-accent">*</span>
-          </legend>
-          <div className="mt-3 space-y-2">
-            <label className="flex items-center gap-3">
-              <input
-                id="sex-offender-yes"
-                type="radio"
-                name="sex-offender"
-                value="Yes"
-                required
-                className="h-4 w-4 border-border text-accent focus:ring-accent"
-              />
-              <span className="text-foreground">Yes</span>
-            </label>
-            <label className="flex items-center gap-3">
-              <input
-                id="sex-offender-no"
-                type="radio"
-                name="sex-offender"
-                value="No"
-                className="h-4 w-4 border-border text-accent focus:ring-accent"
-              />
-              <span className="text-foreground">No</span>
-            </label>
-          </div>
-        </fieldset>
-
-        <div className="space-y-2 md:col-span-2">
-          <label htmlFor="medications" className="block text-sm font-medium text-muted">
-            Medications, including doses, I am currently taking?
-          </label>
-          <textarea
-            id="medications"
-            name="medications"
-            rows={4}
-            className="mt-1 w-full rounded-md border border-border bg-background px-4 py-2 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent"
-          />
-        </div>
-
-        <div className="space-y-2 md:col-span-2">
-          <label htmlFor="court-dates" className="block text-sm font-medium text-muted">
-            Upcoming court dates, probation, drug court, pre-trial, etc:
-          </label>
-          <textarea
-            id="court-dates"
-            name="court-dates"
-            rows={4}
-            className="mt-1 w-full rounded-md border border-border bg-background px-4 py-2 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <label
-            htmlFor="emergency-contact-name"
-            className="block text-sm font-medium text-muted"
-          >
-            Emergency Contact Name <span className="text-accent">*</span>
-          </label>
-          <input
-            id="emergency-contact-name"
-            name="emergency-contact-name"
-            type="text"
-            required
-            className="mt-1 w-full rounded-md border border-border bg-background px-4 py-2 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <label
-            htmlFor="emergency-contact-phone"
-            className="block text-sm font-medium text-muted"
-          >
-            Emergency Contact Phone
-          </label>
-          <input
-            id="emergency-contact-phone"
-            name="emergency-contact-phone"
-            type="tel"
-            className="mt-1 w-full rounded-md border border-border bg-background px-4 py-2 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent"
-          />
-        </div>
-
-        <div className="space-y-2 md:col-span-2">
-          <label className="flex items-start gap-3">
-            <input
-              id="twelve-step-agreement"
-              type="checkbox"
-              name="twelve-step-agreement"
-              value="yes"
-              required
-              className="self-center h-4 w-4 rounded border-border text-accent focus:ring-accent"
-            />
-            <span className="text-sm font-medium text-muted">
-              I understand that Twelve-Step Recovery is a MUST to stay here
-              <span className="text-accent">*</span>
-            </span>
-          </label>
-        </div>
-
-        <div className="space-y-2">
-          <label htmlFor="todays-date" className="block text-sm font-medium text-muted">
-            Today&apos;s Date <span className="text-accent">*</span>
-          </label>
-          <input
-            id="todays-date"
-            name="todays-date"
-            type="date"
-            required
-            placeholder="Today&apos;s Date"
-            className="mt-1 w-full rounded-md border border-border bg-background px-4 py-2 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent"
-          />
-        </div>
+              {field.helpText ? (
+                <p className="text-sm text-muted">{field.helpText}</p>
+              ) : null}
+            </div>
+          );
+        })}
       </div>
 
       <div className="space-y-4">

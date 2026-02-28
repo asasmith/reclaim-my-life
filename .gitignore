@@ -34,6 +34,9 @@
 # misc
 .DS_Store
 *.pem
+web/public/netlify-forms.html
+web/test-results/
+web/playwright-report/
 
 # debug
 npm-debug.log*

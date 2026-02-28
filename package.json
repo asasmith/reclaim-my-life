@@ -8,6 +8,8 @@
     "start": "pnpm --filter @reclaim-my-life/web start",
     "lint": "pnpm --filter @reclaim-my-life/web lint",
     "test": "pnpm --filter @reclaim-my-life/web test",
+    "test:e2e": "pnpm --filter @reclaim-my-life/web test:e2e",
+    "test:e2e:local": "E2E_BASE_URL=http://localhost:3000 pnpm --filter @reclaim-my-life/web test:e2e --ui",
     "test:ui": "pnpm --filter @reclaim-my-life/web test:ui",
     "test:coverage": "pnpm --filter @reclaim-my-life/web test:coverage",
     "test:watch": "pnpm --filter @reclaim-my-life/web test:watch",

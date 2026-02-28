@@ -1,0 +1,144 @@
+name: E2E - Netlify Deploy Preview
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: e2e-netlify-preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Resolve Netlify deploy preview URL
+        id: netlify_preview
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          PR_BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          preview_url=$(node <<'EOF'
+          const https = require("https");
+
+          const token = process.env.NETLIFY_AUTH_TOKEN;
+          const siteId = process.env.NETLIFY_SITE_ID;
+          const branch = process.env.PR_BRANCH;
+
+          if (!token || !siteId || !branch) {
+            console.error("Missing NETLIFY_AUTH_TOKEN, NETLIFY_SITE_ID, or PR branch.");
+            process.exit(1);
+          }
+
+          const url = `https://api.netlify.com/api/v1/sites/${siteId}/deploys?per_page=100`;
+          const options = {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          };
+
+          https
+            .get(url, options, (res) => {
+              let data = "";
+              res.on("data", (chunk) => (data += chunk));
+              res.on("end", () => {
+                if (res.statusCode < 200 || res.statusCode >= 300) {
+                  console.error(`Netlify API error: ${res.statusCode}`);
+                  console.error(data);
+                  process.exit(1);
+                }
+
+                const deploys = JSON.parse(data);
+                const match = deploys.find(
+                  (deploy) => deploy.context === "deploy-preview" && deploy.branch === branch
+                );
+
+                if (!match || !match.deploy_ssl_url) {
+                  console.error("No deploy preview found for branch:", branch);
+                  process.exit(1);
+                }
+
+                process.stdout.write(match.deploy_ssl_url);
+              });
+            })
+            .on("error", (error) => {
+              console.error("Netlify API request failed:", error);
+              process.exit(1);
+            });
+          EOF
+          )
+
+          if [ -z "$preview_url" ]; then
+            echo "Preview URL not found."
+            exit 1
+          fi
+
+          echo "preview_url=$preview_url" >> "$GITHUB_OUTPUT"
+        shell: bash
+
+      - name: Wait for deploy preview to be ready
+        env:
+          PREVIEW_URL: ${{ steps.netlify_preview.outputs.preview_url }}
+        run: |
+          if [ -z "$PREVIEW_URL" ]; then
+            echo "Preview URL not found."
+            exit 1
+          fi
+
+          echo "Preview URL: $PREVIEW_URL"
+          for i in $(seq 1 30); do
+            status=$(curl -s -o /dev/null -w "%{http_code}" "$PREVIEW_URL" || true)
+            if [ "$status" -ge 200 ] && [ "$status" -lt 400 ]; then
+              echo "Preview is live (status $status)."
+              echo "E2E_BASE_URL=$PREVIEW_URL" >> $GITHUB_ENV
+              exit 0
+            fi
+            echo "Waiting for preview... attempt $i";
+            sleep 10
+          done
+
+          echo "Preview URL did not become ready."
+          exit 1
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
+      - name: Install Playwright browsers
+        run: pnpm --filter @reclaim-my-life/web exec playwright install --with-deps
+
+      - name: Run E2E tests
+        run: pnpm --filter @reclaim-my-life/web test:e2e
+
+      - name: Upload Playwright artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-artifacts
+          path: |
+            web/test-results
+            web/playwright-report
+          if-no-files-found: ignore
