@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 
 import type { RegisterFormField } from "@/lib/sanity/types";
+import { normalizeFieldKey } from "../../shared/normalizeFieldKey.mjs";
 
 type RegistrationFormProps = Readonly<{
   formFields: RegisterFormField[] | null | undefined;
@@ -14,16 +15,6 @@ type RegistrationFormProps = Readonly<{
 }>;
 
 type SubmitStatus = "idle" | "success" | "error";
-
-// Keep in sync with normalizeFieldKey in studio/schemas/registerPage.ts.
-const normalizeFieldKey = (value: string) =>
-  value
-    .toLowerCase()
-    .trim()
-    .replace(/[_\s]+/g, "-")
-    .replace(/[^a-z0-9-]/g, "")
-    .replace(/-{2,}/g, "-")
-    .replace(/^-+|-+$/g, "");
 
 const isFullWidth = (type: RegisterFormField["type"]) =>
   type === "textarea" || type === "radio" || type === "checkbox";

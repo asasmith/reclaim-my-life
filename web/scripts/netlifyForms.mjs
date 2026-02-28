@@ -1,11 +1,4 @@
-const normalizeFieldKey = (value) =>
-  value
-    .toLowerCase()
-    .trim()
-    .replace(/[_\s]+/g, "-")
-    .replace(/[^a-z0-9-]/g, "")
-    .replace(/-{2,}/g, "-")
-    .replace(/^-+|-+$/g, "");
+import { normalizeFieldKey } from "../../shared/normalizeFieldKey.mjs";
 
 const CONTACT_FIELDS = [
   { name: "name", type: "text" },

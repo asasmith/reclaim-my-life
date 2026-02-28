@@ -1,14 +1,6 @@
 import { defineType, defineField } from 'sanity';
+import { normalizeFieldKey } from '../../shared/normalizeFieldKey.mjs';
 import { seoFields } from './seoFields';
-
-const normalizeFieldKey = (value: string) =>
-  value
-    .toLowerCase()
-    .trim()
-    .replace(/[_\s]+/g, '-')
-    .replace(/[^a-z0-9-]/g, '')
-    .replace(/-{2,}/g, '-')
-    .replace(/^-+|-+$/g, '');
 
 export default defineType({
   name: 'registerPage',
