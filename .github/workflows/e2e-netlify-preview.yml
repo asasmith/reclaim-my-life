@@ -120,7 +120,7 @@ jobs:
           exit 1
 
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps
+        run: pnpm --filter @reclaim-my-life/web exec playwright install --with-deps
 
       - name: Run E2E tests
         run: pnpm --filter @reclaim-my-life/web test:e2e
