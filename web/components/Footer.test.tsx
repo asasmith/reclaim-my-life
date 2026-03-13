@@ -5,12 +5,17 @@ import { render, screen } from "@/tests/helpers/test-utils";
 describe("Footer", () => {
   it("renders key footer content", () => {
     render(
-      <Footer
-        contactInfo={{
-          phone: "(555) 123-4567",
-          email: "info@reclaimmylife.org",
-          address: {
-            street: "123 Main St",
+        <Footer
+          contactInfo={{
+            phones: [
+              {
+                label: "Main",
+                number: "(555) 123-4567",
+              },
+            ],
+            email: "info@reclaimmylife.org",
+            address: {
+              street: "123 Main St",
             city: "Denver",
             state: "CO",
             zip: "80202",
@@ -45,12 +50,17 @@ describe("Footer", () => {
 
   it("renders only the provided contact details", () => {
     render(
-      <Footer
-        contactInfo={{
-          phone: "(555) 123-4567",
-          email: "",
-          address: {
-            street: "",
+        <Footer
+          contactInfo={{
+            phones: [
+              {
+                label: "Main",
+                number: "(555) 123-4567",
+              },
+            ],
+            email: "",
+            address: {
+              street: "",
             city: "",
             state: "",
             zip: "",
@@ -60,7 +70,8 @@ describe("Footer", () => {
       />
     );
 
-    expect(screen.getByText("Phone: (555) 123-4567")).toBeInTheDocument();
+    expect(screen.getByText("Phone:")).toBeInTheDocument();
+    expect(screen.getByText("(555) 123-4567")).toBeInTheDocument();
     expect(screen.queryByText(/Email:/)).toBeNull();
     expect(screen.queryByText("Address:")).toBeNull();
     expect(screen.queryByText("Social:")).toBeNull();
@@ -68,12 +79,12 @@ describe("Footer", () => {
 
   it("omits the contact block when details are missing", () => {
     render(
-      <Footer
-        contactInfo={{
-          phone: "",
-          email: "",
-          address: {
-            street: "",
+        <Footer
+          contactInfo={{
+            phones: [],
+            email: "",
+            address: {
+              street: "",
             city: "",
             state: "",
             zip: "",
@@ -92,7 +103,7 @@ describe("Footer", () => {
     render(
       <Footer
         contactInfo={{
-          phone: "",
+          phones: [],
           email: "",
           address: {
             street: "456 Elm St",

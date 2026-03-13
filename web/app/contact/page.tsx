@@ -66,10 +66,12 @@ export default async function Contact() {
   }
 
   const contactInfo = siteSettings?.contactInfo;
+  const phones = contactInfo?.phones ?? [];
   const address = contactInfo?.address;
   const cityState = [address?.city, address?.state].filter(Boolean).join(", ");
   const cityStateZip = [cityState, address?.zip].filter(Boolean).join(" ");
   const hasAddress = Boolean(address?.street || cityStateZip);
+  const hasPhones = phones.length > 0;
   const socialLinks = (siteSettings?.socialLinks ?? [])
     .map((link) => ({
       ...link,
@@ -95,12 +97,16 @@ export default async function Contact() {
             </p>
 
             <div className="mt-8 space-y-4">
-              {contactInfo?.phone && (
+              {hasPhones && (
                 <div>
                   <h3 className="font-semibold text-foreground">
                     Phone
                   </h3>
-                  <p className="text-muted">{contactInfo.phone}</p>
+                  <div className="space-y-1 text-muted">
+                    {phones.map((phone) => (
+                      <p key={`${phone.label}-${phone.number}`}>{phone.number}</p>
+                    ))}
+                  </div>
                 </div>
               )}
 

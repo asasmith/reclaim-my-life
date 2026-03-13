@@ -37,7 +37,7 @@ const baseSiteSettings: SiteSettings = {
   _type: "siteSettings",
   siteName: "Reclaim My Life",
   contactInfo: {
-    phone: "",
+    phones: [],
     email: "",
     address: emptyAddress,
   },
@@ -53,7 +53,12 @@ describe("Contact page", () => {
     vi.mocked(getSiteSettings).mockResolvedValue({
       ...baseSiteSettings,
       contactInfo: {
-        phone: "(555) 123-4567",
+        phones: [
+          {
+            label: "Main",
+            number: "(555) 123-4567",
+          },
+        ],
         email: "",
         address: emptyAddress,
       },
@@ -71,7 +76,7 @@ describe("Contact page", () => {
     vi.mocked(getSiteSettings).mockResolvedValue({
       ...baseSiteSettings,
       contactInfo: {
-        phone: "",
+        phones: [],
         email: "",
         address: {
           street: "",

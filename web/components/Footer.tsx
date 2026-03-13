@@ -7,7 +7,7 @@ type FooterProps = Readonly<{
 }>;
 
 export default function Footer({ contactInfo, socialLinks }: FooterProps) {
-  const phone = contactInfo?.phone;
+  const phones = contactInfo?.phones ?? [];
   const email = contactInfo?.email;
   const address = contactInfo?.address;
   const cityState = [address?.city, address?.state].filter(Boolean).join(", ");
@@ -20,7 +20,8 @@ export default function Footer({ contactInfo, socialLinks }: FooterProps) {
     }))
     .filter((link) => Boolean(link.safeUrl));
   const hasSocialLinks = filteredSocialLinks.length > 0;
-  const hasContactDetails = Boolean(phone || email || hasAddress || hasSocialLinks);
+  const hasPhones = phones.length > 0;
+  const hasContactDetails = Boolean(hasPhones || email || hasAddress || hasSocialLinks);
 
   return (
     <footer className="bg-surface">
@@ -41,7 +42,16 @@ export default function Footer({ contactInfo, socialLinks }: FooterProps) {
                 Contact
               </h3>
               <div className="mt-2 space-y-2 text-sm text-muted">
-                {phone && <div>Phone: {phone}</div>}
+                {hasPhones && (
+                  <div>
+                    <div>Phone:</div>
+                    <div>
+                      {phones.map((phone) => (
+                        <div key={`${phone.label}-${phone.number}`}>{phone.number}</div>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 {email && <div>Email: {email}</div>}
                 {hasAddress && (
                   <div>
