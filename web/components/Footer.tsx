@@ -23,6 +23,8 @@ export default function Footer({ contactInfo, socialLinks }: FooterProps) {
   const hasPhones = phones.length > 0;
   const hasContactDetails = Boolean(hasPhones || email || hasAddress || hasSocialLinks);
 
+  console.log('trigger gh change')
+
   return (
     <footer className="bg-surface">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
