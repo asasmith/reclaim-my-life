@@ -81,6 +81,50 @@ describe("Footer", () => {
     expect(screen.queryByText("Social:")).toBeNull();
   });
 
+  it("renders multiple phone numbers in order with tel links", () => {
+    render(
+      <Footer
+        contactInfo={{
+          phones: [
+            {
+              _key: "phone-main",
+              label: "Main",
+              number: "(555) 123-4567",
+            },
+            {
+              _key: "phone-support",
+              label: "Support",
+              number: "(555) 987-6543",
+            },
+          ],
+          email: "",
+          address: {
+            street: "",
+            city: "",
+            state: "",
+            zip: "",
+          },
+        }}
+        socialLinks={[]}
+      />
+    );
+
+    const mainPhoneLink = screen.getByRole("link", {
+      name: "(555) 123-4567",
+    });
+    const supportPhoneLink = screen.getByRole("link", {
+      name: "(555) 987-6543",
+    });
+
+    expect(mainPhoneLink).toHaveAttribute("href", "tel:5551234567");
+    expect(supportPhoneLink).toHaveAttribute("href", "tel:5559876543");
+
+    expect(
+      mainPhoneLink.compareDocumentPosition(supportPhoneLink) &
+        Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+  });
+
   it("omits the contact block when details are missing", () => {
     render(
         <Footer
