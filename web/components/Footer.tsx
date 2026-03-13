@@ -46,9 +46,24 @@ export default function Footer({ contactInfo, socialLinks }: FooterProps) {
                   <div>
                     <div>Phone:</div>
                     <div>
-                      {phones.map((phone) => (
-                        <div key={`${phone.label}-${phone.number}`}>{phone.number}</div>
-                      ))}
+                      {phones.map((phone) => {
+                        const dialableNumber = phone.number.replace(/\D/g, "");
+
+                        return (
+                          <div key={`${phone.label}-${phone.number}`}>
+                            {dialableNumber ? (
+                              <a
+                                href={`tel:${dialableNumber}`}
+                                className="underline underline-offset-4 transition-colors hover:text-foreground"
+                              >
+                                {phone.number}
+                              </a>
+                            ) : (
+                              phone.number
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 )}

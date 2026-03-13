@@ -103,9 +103,24 @@ export default async function Contact() {
                     Phone
                   </h3>
                   <div className="space-y-1 text-muted">
-                    {phones.map((phone) => (
-                      <p key={`${phone.label}-${phone.number}`}>{phone.number}</p>
-                    ))}
+                    {phones.map((phone) => {
+                      const dialableNumber = phone.number.replace(/\D/g, "");
+
+                      return (
+                        <p key={`${phone.label}-${phone.number}`}>
+                          {dialableNumber ? (
+                            <a
+                              href={`tel:${dialableNumber}`}
+                              className="underline underline-offset-4 transition-colors hover:text-foreground"
+                            >
+                              {phone.number}
+                            </a>
+                          ) : (
+                            phone.number
+                          )}
+                        </p>
+                      );
+                    })}
                   </div>
                 </div>
               )}

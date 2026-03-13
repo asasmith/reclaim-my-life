@@ -71,7 +71,9 @@ describe("Footer", () => {
     );
 
     expect(screen.getByText("Phone:")).toBeInTheDocument();
-    expect(screen.getByText("(555) 123-4567")).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "(555) 123-4567" })
+    ).toHaveAttribute("href", "tel:5551234567");
     expect(screen.queryByText(/Email:/)).toBeNull();
     expect(screen.queryByText("Address:")).toBeNull();
     expect(screen.queryByText("Social:")).toBeNull();
