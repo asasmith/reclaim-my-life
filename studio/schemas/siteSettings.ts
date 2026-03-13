@@ -42,10 +42,43 @@ export default defineType({
       description: 'How people can reach you',
       fields: [
         defineField({
-          name: 'phone',
-          title: 'Phone Number',
-          type: 'string',
-          description: 'Main contact phone number (e.g., (555) 123-4567)',
+          name: 'phones',
+          title: 'Phone Numbers',
+          type: 'array',
+          description: 'Add one or more contact phone numbers',
+          of: [
+            {
+              type: 'object',
+              fields: [
+                {
+                  name: 'label',
+                  title: 'Label',
+                  type: 'string',
+                  description: 'Internal label for content managers (not shown on site)',
+                  validation: (Rule) => Rule.required(),
+                },
+                {
+                  name: 'number',
+                  title: 'Phone Number',
+                  type: 'string',
+                  description: 'Phone number to display (e.g., (555) 123-4567)',
+                  validation: (Rule) => Rule.required(),
+                },
+              ],
+              preview: {
+                select: {
+                  title: 'label',
+                  subtitle: 'number',
+                },
+                prepare({ title, subtitle }) {
+                  return {
+                    title: title || 'Untitled',
+                    subtitle: subtitle || 'No number',
+                  };
+                },
+              },
+            },
+          ],
         }),
         defineField({
           name: 'email',

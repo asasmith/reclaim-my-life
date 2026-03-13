@@ -37,7 +37,7 @@ const baseSiteSettings: SiteSettings = {
   _type: "siteSettings",
   siteName: "Reclaim My Life",
   contactInfo: {
-    phone: "",
+    phones: [],
     email: "",
     address: emptyAddress,
   },
@@ -53,7 +53,13 @@ describe("Contact page", () => {
     vi.mocked(getSiteSettings).mockResolvedValue({
       ...baseSiteSettings,
       contactInfo: {
-        phone: "(555) 123-4567",
+        phones: [
+          {
+            _key: "phone-main",
+            label: "Main",
+            number: "(555) 123-4567",
+          },
+        ],
         email: "",
         address: emptyAddress,
       },
@@ -63,15 +69,51 @@ describe("Contact page", () => {
     render(page);
 
     expect(screen.getByText("Phone")).toBeInTheDocument();
-    expect(screen.getByText("(555) 123-4567")).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "(555) 123-4567" })
+    ).toHaveAttribute("href", "tel:5551234567");
     expect(screen.queryByText("Email")).toBeNull();
+  });
+
+  it("renders multiple phone numbers in the correct order", async () => {
+    vi.mocked(getSiteSettings).mockResolvedValue({
+      ...baseSiteSettings,
+      contactInfo: {
+        phones: [
+          {
+            _key: "phone-main",
+            label: "Main",
+            number: "(555) 111-2222",
+          },
+          {
+            _key: "phone-support",
+            label: "Support",
+            number: "(555) 333-4444",
+          },
+        ],
+        email: "",
+        address: emptyAddress,
+      },
+    });
+
+    const page = await ContactPage();
+    render(page);
+
+    expect(screen.getByText("Phone")).toBeInTheDocument();
+
+    const phoneLinks = screen.getAllByRole("link", { name: /(555)/ });
+    expect(phoneLinks).toHaveLength(2);
+    expect(phoneLinks[0]).toHaveTextContent("(555) 111-2222");
+    expect(phoneLinks[0]).toHaveAttribute("href", "tel:5551112222");
+    expect(phoneLinks[1]).toHaveTextContent("(555) 333-4444");
+    expect(phoneLinks[1]).toHaveAttribute("href", "tel:5553334444");
   });
 
   it("renders address parts without placeholders", async () => {
     vi.mocked(getSiteSettings).mockResolvedValue({
       ...baseSiteSettings,
       contactInfo: {
-        phone: "",
+        phones: [],
         email: "",
         address: {
           street: "",

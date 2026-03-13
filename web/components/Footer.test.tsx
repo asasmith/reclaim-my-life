@@ -5,12 +5,18 @@ import { render, screen } from "@/tests/helpers/test-utils";
 describe("Footer", () => {
   it("renders key footer content", () => {
     render(
-      <Footer
-        contactInfo={{
-          phone: "(555) 123-4567",
-          email: "info@reclaimmylife.org",
-          address: {
-            street: "123 Main St",
+        <Footer
+          contactInfo={{
+            phones: [
+              {
+                _key: "phone-main",
+                label: "Main",
+                number: "(555) 123-4567",
+              },
+            ],
+            email: "info@reclaimmylife.org",
+            address: {
+              street: "123 Main St",
             city: "Denver",
             state: "CO",
             zip: "80202",
@@ -45,9 +51,52 @@ describe("Footer", () => {
 
   it("renders only the provided contact details", () => {
     render(
+        <Footer
+          contactInfo={{
+            phones: [
+              {
+                _key: "phone-main",
+                label: "Main",
+                number: "(555) 123-4567",
+              },
+            ],
+            email: "",
+            address: {
+              street: "",
+            city: "",
+            state: "",
+            zip: "",
+          },
+        }}
+        socialLinks={[]}
+      />
+    );
+
+    expect(screen.getByText("Phone:")).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "(555) 123-4567" })
+    ).toHaveAttribute("href", "tel:5551234567");
+    expect(screen.queryByText(/Email:/)).toBeNull();
+    expect(screen.queryByText("Address:")).toBeNull();
+    expect(screen.queryByText("Social:")).toBeNull();
+  });
+
+  it("renders multiple phone numbers in order with tel links", () => {
+    render(
       <Footer
         contactInfo={{
-          phone: "(555) 123-4567",
+          phones: [
+            {
+              _key: "phone-main",
+              label: "Main",
+              number: "(555) 123-4567",
+            },
+            {
+              _key: "phone-support",
+              label: "Support",
+              number: "(555) 987-6543",
+            },
+          ],
           email: "",
           address: {
             street: "",
@@ -60,20 +109,30 @@ describe("Footer", () => {
       />
     );
 
-    expect(screen.getByText("Phone: (555) 123-4567")).toBeInTheDocument();
-    expect(screen.queryByText(/Email:/)).toBeNull();
-    expect(screen.queryByText("Address:")).toBeNull();
-    expect(screen.queryByText("Social:")).toBeNull();
+    const mainPhoneLink = screen.getByRole("link", {
+      name: "(555) 123-4567",
+    });
+    const supportPhoneLink = screen.getByRole("link", {
+      name: "(555) 987-6543",
+    });
+
+    expect(mainPhoneLink).toHaveAttribute("href", "tel:5551234567");
+    expect(supportPhoneLink).toHaveAttribute("href", "tel:5559876543");
+
+    expect(
+      mainPhoneLink.compareDocumentPosition(supportPhoneLink) &
+        Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
   });
 
   it("omits the contact block when details are missing", () => {
     render(
-      <Footer
-        contactInfo={{
-          phone: "",
-          email: "",
-          address: {
-            street: "",
+        <Footer
+          contactInfo={{
+            phones: [],
+            email: "",
+            address: {
+              street: "",
             city: "",
             state: "",
             zip: "",
@@ -92,7 +151,7 @@ describe("Footer", () => {
     render(
       <Footer
         contactInfo={{
-          phone: "",
+          phones: [],
           email: "",
           address: {
             street: "456 Elm St",

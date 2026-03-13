@@ -54,7 +54,10 @@ const siteSettingsQuery = `*[_type == "siteSettings"][0]{
   siteName,
   tagline,
   contactInfo {
-    phone,
+    phones[] {
+      label,
+      number
+    },
     email,
     address {
       street,

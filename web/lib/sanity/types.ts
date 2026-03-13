@@ -35,9 +35,16 @@ export type Address = {
   zip: string;
 };
 
+// Phone number
+export type PhoneNumber = {
+  _key?: string;
+  label: string;
+  number: string;
+};
+
 // Contact information
 export type ContactInfo = {
-  phone: string;
+  phones?: PhoneNumber[];
   email: string;
   address: Address;
 };

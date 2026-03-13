@@ -66,10 +66,12 @@ export default async function Contact() {
   }
 
   const contactInfo = siteSettings?.contactInfo;
+  const phones = contactInfo?.phones ?? [];
   const address = contactInfo?.address;
   const cityState = [address?.city, address?.state].filter(Boolean).join(", ");
   const cityStateZip = [cityState, address?.zip].filter(Boolean).join(" ");
   const hasAddress = Boolean(address?.street || cityStateZip);
+  const hasPhones = phones.length > 0;
   const socialLinks = (siteSettings?.socialLinks ?? [])
     .map((link) => ({
       ...link,
@@ -95,12 +97,35 @@ export default async function Contact() {
             </p>
 
             <div className="mt-8 space-y-4">
-              {contactInfo?.phone && (
+              {hasPhones && (
                 <div>
                   <h3 className="font-semibold text-foreground">
                     Phone
                   </h3>
-                  <p className="text-muted">{contactInfo.phone}</p>
+                  <div className="space-y-1 text-muted">
+                    {phones.map((phone) => {
+                      const trimmedNumber = phone.number.trim();
+                      const dialableNumber = trimmedNumber.startsWith("+")
+                        ? "+" + trimmedNumber.slice(1).replace(/\D/g, "")
+                        : trimmedNumber.replace(/\D/g, "");
+                      const phoneKey = phone._key ?? `${phone.label}-${phone.number}`;
+
+                      return (
+                        <p key={phoneKey}>
+                          {dialableNumber ? (
+                            <a
+                              href={`tel:${dialableNumber}`}
+                              className="underline underline-offset-4 transition-colors hover:text-foreground"
+                            >
+                              {phone.number}
+                            </a>
+                          ) : (
+                            phone.number
+                          )}
+                        </p>
+                      );
+                    })}
+                  </div>
                 </div>
               )}
 
