@@ -47,7 +47,11 @@ export default function Footer({ contactInfo, socialLinks }: FooterProps) {
                     <div>Phone:</div>
                     <div>
                       {phones.map((phone) => {
-                        const dialableNumber = phone.number.replace(/\D/g, "");
+                        const rawNumber = phone.number?.trim() ?? "";
+                        const hasLeadingPlus = rawNumber.startsWith("+");
+                        const numericPart = rawNumber.replace(/\D/g, "");
+                        const dialableNumber =
+                          hasLeadingPlus && numericPart ? `+${numericPart}` : numericPart;
                         const phoneKey = phone._key ?? `${phone.label}-${phone.number}`;
 
                         return (
