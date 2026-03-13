@@ -37,6 +37,7 @@ export type Address = {
 
 // Phone number
 export type PhoneNumber = {
+  _key?: string;
   label: string;
   number: string;
 };

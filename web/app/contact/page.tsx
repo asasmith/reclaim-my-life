@@ -105,9 +105,10 @@ export default async function Contact() {
                   <div className="space-y-1 text-muted">
                     {phones.map((phone) => {
                       const dialableNumber = phone.number.replace(/\D/g, "");
+                      const phoneKey = phone._key ?? `${phone.label}-${phone.number}`;
 
                       return (
-                        <p key={`${phone.label}-${phone.number}`}>
+                        <p key={phoneKey}>
                           {dialableNumber ? (
                             <a
                               href={`tel:${dialableNumber}`}

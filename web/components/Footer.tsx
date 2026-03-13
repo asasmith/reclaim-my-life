@@ -48,9 +48,10 @@ export default function Footer({ contactInfo, socialLinks }: FooterProps) {
                     <div>
                       {phones.map((phone) => {
                         const dialableNumber = phone.number.replace(/\D/g, "");
+                        const phoneKey = phone._key ?? `${phone.label}-${phone.number}`;
 
                         return (
-                          <div key={`${phone.label}-${phone.number}`}>
+                          <div key={phoneKey}>
                             {dialableNumber ? (
                               <a
                                 href={`tel:${dialableNumber}`}

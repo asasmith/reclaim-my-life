@@ -55,6 +55,7 @@ describe("Contact page", () => {
       contactInfo: {
         phones: [
           {
+            _key: "phone-main",
             label: "Main",
             number: "(555) 123-4567",
           },

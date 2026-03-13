@@ -9,6 +9,7 @@ describe("Footer", () => {
           contactInfo={{
             phones: [
               {
+                _key: "phone-main",
                 label: "Main",
                 number: "(555) 123-4567",
               },
@@ -54,6 +55,7 @@ describe("Footer", () => {
           contactInfo={{
             phones: [
               {
+                _key: "phone-main",
                 label: "Main",
                 number: "(555) 123-4567",
               },
