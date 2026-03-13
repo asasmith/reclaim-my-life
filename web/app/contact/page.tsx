@@ -104,7 +104,10 @@ export default async function Contact() {
                   </h3>
                   <div className="space-y-1 text-muted">
                     {phones.map((phone) => {
-                      const dialableNumber = phone.number.replace(/\D/g, "");
+                      const trimmedNumber = phone.number.trim();
+                      const dialableNumber = trimmedNumber.startsWith("+")
+                        ? "+" + trimmedNumber.slice(1).replace(/\D/g, "")
+                        : trimmedNumber.replace(/\D/g, "");
                       const phoneKey = phone._key ?? `${phone.label}-${phone.number}`;
 
                       return (
